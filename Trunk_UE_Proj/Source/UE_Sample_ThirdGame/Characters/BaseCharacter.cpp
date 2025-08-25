@@ -1,5 +1,5 @@
-#include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "CoreMinimal.h"
 #include "Components/HealthComponent.h"
 #include "Components/StaminaComponent.h"
 #include "EnhancedInputComponent.h"

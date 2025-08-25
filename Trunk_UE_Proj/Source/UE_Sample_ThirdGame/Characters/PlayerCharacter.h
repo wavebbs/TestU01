@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* PauseAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveAction;
+
 	// 玩家特有的状态
 	UPROPERTY(BlueprintReadOnly, Category = "Player State")
 	bool bIsAttacking = false;
@@ -71,6 +74,9 @@ protected:
 
 	UFUNCTION()
 	void OnPausePressed(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnMove(const FInputActionValue& Value);
 
 	// 战斗逻辑函数
 	UFUNCTION(BlueprintCallable, Category = "Combat")

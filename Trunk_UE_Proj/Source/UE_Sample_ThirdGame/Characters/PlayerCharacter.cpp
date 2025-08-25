@@ -12,6 +12,13 @@
 APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	// 保证角色朝向移动方向
+	bUseControllerRotationYaw = false;
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
+	}
 }
 
 void APlayerCharacter::BeginPlay()
@@ -49,6 +56,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		if (PauseAction)
 		{
 			EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &APlayerCharacter::OnPausePressed);
+		}
+
+		// 绑定移动输入
+		if (MoveAction)
+		{
+			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnMove);
 		}
 	}
 }
@@ -97,6 +110,25 @@ void APlayerCharacter::OnInventoryPressed(const FInputActionValue& Value)
 void APlayerCharacter::OnPausePressed(const FInputActionValue& Value)
 {
 	TogglePause();
+}
+
+void APlayerCharacter::OnMove(const FInputActionValue& Value)
+{
+	// 获取输入向量
+	FVector2D MovementVector = Value.Get<FVector2D>();
+	if (Controller && (MovementVector.X != 0.f || MovementVector.Y != 0.f))
+	{
+		// 获取控制器旋转（通常为相机朝向）
+		const FRotator YawRotation(0, Controller->GetControlRotation().Yaw, 0);
+
+		// 计算前后/左右方向
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		// 应用移动（确保方向与动画一致）
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
+	}
 }
 
 void APlayerCharacter::PerformAttack()
