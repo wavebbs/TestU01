@@ -1,0 +1,12 @@
+Binaries
+Intermediate
+DerivedDataCache
+Saved
+*.suo
+*.sln
+
+# ignore vs
+.vsconfig
+
+# ignore rider 
+.idea
