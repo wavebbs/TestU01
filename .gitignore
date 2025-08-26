@@ -1,12 +1,307 @@
-Binaries
-Intermediate
-DerivedDataCache
-Saved
-*.suo
-*.sln
+# UE项目标准gitignore配置
 
-# ignore vs
-.vsconfig
+# Binaries
+Trunk_UE_Proj/Binaries/
+Trunk_UE_Proj/DerivedDataCache/
 
-# ignore rider 
-.idea
+# Intermediate files
+Trunk_UE_Proj/Intermediate/
+Trunk_UE_Proj/obj/
+
+# Cache files
+Trunk_UE_Proj/*.tmp
+Trunk_UE_Proj/[Tt]emp/
+
+# Unreal Engine cache and intermediate files
+Trunk_UE_Proj/Saved/
+Trunk_UE_Proj/*.sln
+Trunk_UE_Proj/*.suo
+Trunk_UE_Proj/*.xcodeproj
+Trunk_UE_Proj/*.xcworkspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Visual Studio files
+Trunk_UE_Proj/.vs/
+Trunk_UE_Proj/.vscode/
+Trunk_UE_Proj/*.sln
+Trunk_UE_Proj/*.vcxproj
+Trunk_UE_Proj/*.vcxproj.filters
+Trunk_UE_Proj/*.vcxproj.user
+Trunk_UE_Proj/*.sdf
+Trunk_UE_Proj/*.opensdf
+Trunk_UE_Proj/*.suo
+Trunk_UE_Proj/*.user
+Trunk_UE_Proj/*.userosscache
+Trunk_UE_Proj/*.sln.docstates
+Trunk_UE_Proj/*.userprefs
+Trunk_UE_Proj/.vsconfig
+
+# Rider files
+Trunk_UE_Proj/.idea/
+Trunk_UE_Proj/*.sln.iml
+
+# Mac specific
+.DS_Store
+
+# Starter Content (uncomment to ignore)
+#Trunk_UE_Proj/Content/StarterContent/
+
+# Marketplace content (uncomment to ignore)
+#Trunk_UE_Proj/Content/Marketplace/
+
+# UE4/UE5 compiled shaders
+Trunk_UE_Proj/*.usf.cache
+Trunk_UE_Proj/*.ushader
+
+# Crash dumps
+Trunk_UE_Proj/*.crashdump
+
+# Local settings
+Trunk_UE_Proj/Config/UserSettings.ini
+Trunk_UE_Proj/Config/UserEngine.ini
+Trunk_UE_Proj/Config/UserInput.ini
+Trunk_UE_Proj/Config/UserLightmass.ini
+Trunk_UE_Proj/Saved/Config/
+
+# Automation tool
+Trunk_UE_Proj/Saved/Logs/
+Trunk_UE_Proj/Saved/AutoScreenshot.png
+Trunk_UE_Proj/Saved/Backup/
+Trunk_UE_Proj/Saved/Config/CrashReportClient/
+Trunk_UE_Proj/Saved/Crashes/
+Trunk_UE_Proj/Saved/MaterialStats/
+Trunk_UE_Proj/Saved/MaterialStatsDebug/
+
+# Content Browser cache
+Trunk_UE_Proj/DerivedDataCache/
+
+# Precompiled headers
+Trunk_UE_Proj/*.gch
+Trunk_UE_Proj/*.pch
+
+# Build results
+Trunk_UE_Proj/[Dd]ebug/
+Trunk_UE_Proj/[Dd]ebugPublic/
+Trunk_UE_Proj/[Rr]elease/
+Trunk_UE_Proj/[Rr]eleases/
+Trunk_UE_Proj/x64/
+Trunk_UE_Proj/x86/
+Trunk_UE_Proj/build/
+Trunk_UE_Proj/bld/
+Trunk_UE_Proj/[Bb]in/
+Trunk_UE_Proj/[Oo]bj/
+
+# MSTest test Results
+Trunk_UE_Proj/[Tt]est[Rr]esult*/
+Trunk_UE_Proj/[Bb]uild[Ll]og.*
+
+# Visual Studio profiler
+Trunk_UE_Proj/*.psess
+Trunk_UE_Proj/*.vsp
+Trunk_UE_Proj/*.vspx
+Trunk_UE_Proj/*.sap
+
+# Others
+Trunk_UE_Proj/*.tmp_proj
+Trunk_UE_Proj/*.log
+Trunk_UE_Proj/*.tlog
+Trunk_UE_Proj/*.vspscc
+Trunk_UE_Proj/*.vssscc
+Trunk_UE_Proj/.builds
+Trunk_UE_Proj/*.pidb
+Trunk_UE_Proj/*.svclog
+Trunk_UE_Proj/*.scc
+
+# Backup & report files from converting an old project file
+Trunk_UE_Proj/_UpgradeReport_Files/
+Trunk_UE_Proj/Backup*/
+Trunk_UE_Proj/UpgradeLog*.XML
+Trunk_UE_Proj/UpgradeLog*.htm
+
+# SQL Server files
+Trunk_UE_Proj/*.mdf
+Trunk_UE_Proj/*.ldf
+
+# Business Intelligence projects
+Trunk_UE_Proj/*.rdl.data
+Trunk_UE_Proj/*.bim.layout
+Trunk_UE_Proj/*.bim_*.settings
+
+# Microsoft Fakes
+Trunk_UE_Proj/FakesAssemblies/
+
+# Node.js Tools for Visual Studio
+Trunk_UE_Proj/.ntvs_analysis.dat
+
+# Visual Studio 6 build log
+Trunk_UE_Proj/*.plg
+
+# Visual Studio 6 workspace options file
+Trunk_UE_Proj/*.opt
+
+# NuGet Packages
+Trunk_UE_Proj/*.nupkg
+# The packages folder can be ignored because of Package Restore
+Trunk_UE_Proj/**/packages/*
+# except build/, which is used as an MSBuild target.
+!Trunk_UE_Proj/**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!Trunk_UE_Proj/**/packages/repositories.config
+
+# Microsoft Azure Build Output
+Trunk_UE_Proj/csx/
+Trunk_UE_Proj/*.build.csdef
+
+# Windows Store app package directory
+Trunk_UE_Proj/AppPackages/
+
+# Others
+Trunk_UE_Proj/sql/
+Trunk_UE_Proj/*.Cache
+Trunk_UE_Proj/ClientBin/
+Trunk_UE_Proj/[Ss]tyle[Cc]op.*
+Trunk_UE_Proj/~$*
+Trunk_UE_Proj/*~
+Trunk_UE_Proj/*.dbmdl
+Trunk_UE_Proj/*.dbproj.schemaview
+Trunk_UE_Proj/*.publishsettings
+Trunk_UE_Proj/*.pfx
+Trunk_UE_Proj/*.publishproj
+
+# RIA/Silverlight projects
+Trunk_UE_Proj/Generated_Code/
+
+# Backup & report files from converting an old project file to a newer
+Trunk_UE_Proj/_UpgradeReport_Files/
+Trunk_UE_Proj/Backup*/
+Trunk_UE_Proj/UpgradeLog*.XML
+Trunk_UE_Proj/UpgradeLog*.htm
+
+# SQL Server files
+Trunk_UE_Proj/*.mdf
+Trunk_UE_Proj/*.ldf
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+# =========================
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Unreal-specific patterns
+Trunk_UE_Proj/*.uasset.tmp
+Trunk_UE_Proj/*.umap.tmp
+Trunk_UE_Proj/Content/**/Collections/
+Trunk_UE_Proj/Build/
+
+# Packaging
+Trunk_UE_Proj/dist/
+Trunk_UE_Proj/Dist/
+
+# Local user-specific files
+Trunk_UE_Proj/*.DotSettings.user
+
+# UE Hot Reload temp files
+Trunk_UE_Proj/HotReload/
+
+# UE Android builds
+Trunk_UE_Proj/[Aa]ndroid/
+Trunk_UE_Proj/APKs/
+
+# UE iOS builds
+Trunk_UE_Proj/[Ii]OS/
+
+# UE HTML5 builds  
+Trunk_UE_Proj/HTML5/
+
+# UE Switch builds
+Trunk_UE_Proj/Switch/
+
+# UE PS4 builds
+Trunk_UE_Proj/PS4/
+
+# UE XboxOne builds
+Trunk_UE_Proj/XboxOne/
+
+# UE Linux builds
+Trunk_UE_Proj/Linux/
+Trunk_UE_Proj/LinuxNoEditor/
+
+# UE Mac builds
+Trunk_UE_Proj/Mac/
+Trunk_UE_Proj/MacNoEditor/
+
+# UE Win32 builds
+Trunk_UE_Proj/Win32/
+
+# UE Win64 builds
+Trunk_UE_Proj/Win64/
+
+# UE Server builds
+Trunk_UE_Proj/WindowsServer/
+Trunk_UE_Proj/LinuxServer/
+
+# Blueprint nativization
+Trunk_UE_Proj/NativizedAssets/
+
+# Localization
+Trunk_UE_Proj/Content/Localization/
+
+# Encrypted content
+Trunk_UE_Proj/EncryptedPaks/
+
+# Live coding
+Trunk_UE_Proj/LiveCoding/
+
+# Custom user ignore (uncomment any needed)
+# Trunk_UE_Proj/AssetRegistry.bin
+# Trunk_UE_Proj/compile_commands.json
+# Trunk_UE_Proj/tags
