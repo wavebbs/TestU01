@@ -7,8 +7,6 @@
 // 前向声明
 class UInputMappingContext;
 class UInputAction;
-class USpringArmComponent;
-class UCameraComponent;
 class UHealthComponent;
 class UStaminaComponent;
 struct FInputActionValue;
@@ -47,13 +45,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* InteractAction;
-
-	// 相机组件
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	USpringArmComponent* CameraBoom;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	UCameraComponent* FollowCamera;
 
 	// 角色组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -168,10 +159,4 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Components")
 	UStaminaComponent* GetStaminaComponent() const { return StaminaComponent; }
-
-	UFUNCTION(BlueprintPure, Category = "Camera")
-	UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	UFUNCTION(BlueprintPure, Category = "Camera")
-	USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 };

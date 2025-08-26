@@ -32,10 +32,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* PauseAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* MoveAction;
-
+	
 	// 玩家特有的状态
 	UPROPERTY(BlueprintReadOnly, Category = "Player State")
 	bool bIsAttacking = false;
@@ -113,6 +110,20 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Player State")
 	bool IsPaused() const { return bIsPaused; }
+
+	// 相机组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	UCameraComponent* FollowCamera;
+
+	// 获取组件引用
+	UFUNCTION(BlueprintPure, Category = "Camera")
+	UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintPure, Category = "Camera")
+	USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	// 事件委托
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackPerformed);

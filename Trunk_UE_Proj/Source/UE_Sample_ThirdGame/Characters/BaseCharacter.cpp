@@ -8,8 +8,6 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "Interfaces/InteractableInterface.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 
 ABaseCharacter::ABaseCharacter()
@@ -22,20 +20,6 @@ ABaseCharacter::ABaseCharacter()
 	GetCharacterMovement()->JumpZVelocity = JumpForce;
 	GetCharacterMovement()->AirControl = 0.2f;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-
-	// 创建相机臂组件
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f;
-	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->bInheritPitch = false;
-	CameraBoom->bInheritYaw = true;
-	CameraBoom->bInheritRoll = false;
-
-	// 创建跟随相机
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = false;
 
 	// 创建健康组件
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
@@ -266,8 +250,8 @@ void ABaseCharacter::PerformInteraction()
 {
 	// 执行交互逻辑
 	// 这里可以添加射线检测来查找可交互对象
-	FVector StartLocation = FollowCamera->GetComponentLocation();
-	FVector ForwardVector = FollowCamera->GetForwardVector();
+	FVector StartLocation = GetActorLocation() + GetActorForwardVector() * 50.0f;
+	FVector ForwardVector = GetActorForwardVector();
 	FVector EndLocation = StartLocation + (ForwardVector * 200.0f);
 
 	FHitResult HitResult;
