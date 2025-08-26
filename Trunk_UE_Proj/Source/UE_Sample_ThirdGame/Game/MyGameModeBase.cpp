@@ -283,6 +283,7 @@ APawn* AMyGameModeBase::SpawnDefaultPawnFor_Implementation(AController* NewPlaye
 	{
 		DefaultCharacterClass = DefaultPawnClass;
 	}
+	
 	// 使用自定义角色类生成Pawn
 	if (DefaultCharacterClass)
 	{
@@ -297,6 +298,7 @@ APawn* AMyGameModeBase::SpawnDefaultPawnFor_Implementation(AController* NewPlaye
 	}
 	
 	return Super::SpawnDefaultPawnFor_Implementation(NewPlayer, StartSpot);
+	
 }
 
 void AMyGameModeBase::SetGameState(EGameState NewState)
