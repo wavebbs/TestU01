@@ -278,6 +278,11 @@ void AMyGameModeBase::Logout(AController* Exiting)
 
 APawn* AMyGameModeBase::SpawnDefaultPawnFor_Implementation(AController* NewPlayer, AActor* StartSpot)
 {
+
+	if (DefaultCharacterClass == nullptr)
+	{
+		DefaultCharacterClass = DefaultPawnClass;
+	}
 	// 使用自定义角色类生成Pawn
 	if (DefaultCharacterClass)
 	{
