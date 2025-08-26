@@ -8,6 +8,9 @@ Trunk_UE_Proj/DerivedDataCache/
 Trunk_UE_Proj/Intermediate/
 Trunk_UE_Proj/obj/
 
+#Plugins
+Trunk_UE_Proj/Plugins
+
 # Cache files
 Trunk_UE_Proj/*.tmp
 Trunk_UE_Proj/[Tt]emp/
