@@ -71,5 +71,6 @@ void UCharacterAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 		// 计算Yaw变化量（角度）
 		YawDelta = FMath::FindDeltaAngleDegrees(PreviousYaw, Yaw);
 		PreviousYaw = Yaw; // 更新上一帧的Yaw值
+		
 	}
 }
