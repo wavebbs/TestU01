@@ -1,10 +1,15 @@
+#pragma once
+
 #include "BeHitData.generated.h"
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
 class UBeHitData : public UObject
 {
     GENERATED_BODY()
 public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BeHit")
+    float DefenceDamage = 0.f;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BeHit")
     float FinalDamage = 0.f;
 
