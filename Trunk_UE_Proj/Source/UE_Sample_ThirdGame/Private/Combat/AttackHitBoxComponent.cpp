@@ -3,6 +3,13 @@
 
 #include "Combat/AttackHitBoxComponent.h"
 
+#include "Combat/BeHitData.h"
+#include "Combat/CharacterBeHitLogicComponent.h"
+#include "Combat/HitResultData.h"
+#include "Combat/HurtBoxComponent.h"
+
+class UCharacterBeHitLogicComponent;
+class UHurtBoxHandlerComponent;
 // Sets default values for this component's properties
 UAttackHitBoxComponent::UAttackHitBoxComponent()
 {
@@ -10,9 +17,11 @@ UAttackHitBoxComponent::UAttackHitBoxComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	SetGenerateOverlapEvents(false);
+	UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// UPrimitiveComponent::SetCollisionResponseToAllChannels(ECR_Ignore);
+	// UPrimitiveComponent::SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
-
 
 // Called when the game starts
 void UAttackHitBoxComponent::BeginPlay()
@@ -30,5 +39,51 @@ void UAttackHitBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UAttackHitBoxComponent::BeginAttackWindow(UAttackData* InData, FAttackInfo& InInfo)
+{
+	if (InData != nullptr)
+	{
+		CurAttackData = InData;
+	}
+	else
+	{
+		CurAttackData = BaseAttackData;
+	}
+
+	SetGenerateOverlapEvents(true);
+	UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	
+	if (!OnComponentBeginOverlap.IsAlreadyBound(this, &UAttackHitBoxComponent::OnHitBoxOverlap))
+	{
+		OnComponentBeginOverlap.AddDynamic(this, &UAttackHitBoxComponent::OnHitBoxOverlap);
+		
+	}
+}
+
+void UAttackHitBoxComponent::EndAttackWindow()
+{
+	SetGenerateOverlapEvents(false);
+	UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CurAttackData = nullptr;
+}
+
+void UAttackHitBoxComponent::OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!CurAttackData || !OtherComp || !OtherActor || OtherActor == GetOwner())
+		return;
+
+	// Step1: 判断是否是 HurtBox
+	UHurtBoxComponent* HurtBox = Cast<UHurtBoxComponent>(OtherComp);
+	if (!HurtBox) return;
+
+	//TODO
+
+	const float TestDamage = CurAttackData->Damage - HurtBox->GetBeHitData()->DefenceDamage;
+	// DebugResult.
+	UE_LOG(LogTemp, Log, TEXT("AttackData Damage: %f - DefenceDamage %f = Result Damage : %f"), CurAttackData->Damage, HurtBox->GetBeHitData()->DefenceDamage, TestDamage);
+
 }
 

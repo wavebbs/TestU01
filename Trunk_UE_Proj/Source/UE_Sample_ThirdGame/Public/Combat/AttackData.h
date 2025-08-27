@@ -1,9 +1,11 @@
+#pragma once
 #include "AttackData.generated.h"
 
-UCLASS(BlueprintType)
-class UAttackData : public UObject
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+class UE_SAMPLE_THIRDGAME_API UAttackData : public UDataAsset
 {
     GENERATED_BODY()
+    
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attack")
     float Damage = 0.f;
