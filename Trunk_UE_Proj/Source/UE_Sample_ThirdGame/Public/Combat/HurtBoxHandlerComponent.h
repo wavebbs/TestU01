@@ -7,6 +7,7 @@
 #include "HurtBoxHandlerComponent.generated.h"
 
 
+class UAttackData;
 class UHurtBoxComponent;
 class UBeHitData;
 
@@ -32,13 +33,13 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// 注册/注销 HurtBox
-	// void RegisterHurtBox(UHurtBoxComponent* HurtBox);
-	// void UnregisterHurtBox(UHurtBoxComponent* HurtBox);
+	void RegisterHurtBox(UHurtBoxComponent* HurtBox);
+	void UnregisterHurtBox(UHurtBoxComponent* HurtBox);
 
 	// 按优先级筛选最终生效的受击框
-	// UFUNCTION(BlueprintCallable, Category="HurtBox")
-	// const UBeHitData* SelectBeHitBox(
-	// 	const TArray<UHurtBoxComponent*>& Candidates,
-	// 	const UAttackData* AttackData) const;
+	UFUNCTION(BlueprintCallable, Category="HurtBox")
+	const UBeHitData* SelectBeHitBox(
+		const TArray<UHurtBoxComponent*>& Candidates,
+		const UAttackData* AttackData) const;
 
  };

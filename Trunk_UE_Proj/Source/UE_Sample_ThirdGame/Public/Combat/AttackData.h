@@ -8,10 +8,13 @@ class UE_SAMPLE_THIRDGAME_API UAttackData : public UDataAsset
     
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attack")
-    float Damage = 0.f;
+    float Damage = 20.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attack")
-    float StiffTime = 0.f;   // 攻击造成硬直时间
+    float KnockbackStrength = 20.f;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attack")
+    float BaseStunTime = 5.f;   // 攻击造成硬直时间
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attack")
     float LaunchPower = 0.f; // 击飞/击退力度

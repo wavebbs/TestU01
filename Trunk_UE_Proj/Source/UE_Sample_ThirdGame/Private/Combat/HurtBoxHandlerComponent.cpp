@@ -3,6 +3,9 @@
 
 #include "Combat/HurtBoxHandlerComponent.h"
 
+#include "Combat/AttackData.h"
+#include "Combat/HurtBoxComponent.h"
+
 // Sets default values for this component's properties
 UHurtBoxHandlerComponent::UHurtBoxHandlerComponent()
 {
@@ -30,5 +33,35 @@ void UHurtBoxHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UHurtBoxHandlerComponent::RegisterHurtBox(UHurtBoxComponent* HurtBox)
+{
+	if (HurtBox && !HurtBoxes.Contains(HurtBox))
+	{
+		HurtBoxes.Add(HurtBox);
+	}
+}
+
+void UHurtBoxHandlerComponent::UnregisterHurtBox(UHurtBoxComponent* HurtBox)
+{
+	HurtBoxes.Remove(HurtBox);
+}
+
+const UBeHitData* UHurtBoxHandlerComponent::SelectBeHitBox(const TArray<UHurtBoxComponent*>& Candidates,
+                                                           const UAttackData* AttackData) const
+{
+	if (Candidates.Num() == 0 || !AttackData)
+	{
+		return nullptr;
+	}
+
+	// Test one be hurt box.
+	if (Candidates.Num() > 0)
+	{
+		return  Candidates[0]->GetBeHitData();
+	}
+
+	return nullptr;
 }
 

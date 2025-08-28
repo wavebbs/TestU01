@@ -5,8 +5,9 @@
 
 #include "Combat/BeHitData.h"
 #include "Combat/CharacterBeHitLogicComponent.h"
-#include "Combat/HitResultData.h"
 #include "Combat/HurtBoxComponent.h"
+#include "Combat/HurtBoxHandlerComponent.h"
+#include "GameFramework/Character.h"
 
 class UCharacterBeHitLogicComponent;
 class UHurtBoxHandlerComponent;
@@ -72,14 +73,36 @@ void UAttackHitBoxComponent::EndAttackWindow()
 void UAttackHitBoxComponent::OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UE_LOG(LogTemp, Log, TEXT("AttackData Damage: start"));
+	// if (!CurAttackData || !OtherComp || !OtherActor)
 	if (!CurAttackData || !OtherComp || !OtherActor || OtherActor == GetOwner())
+	{
 		return;
-
+	}
+		
 	// Step1: 判断是否是 HurtBox
 	UHurtBoxComponent* HurtBox = Cast<UHurtBoxComponent>(OtherComp);
 	if (!HurtBox) return;
+	
+	// Step2: 获取角色身上的 Handler
+	ACharacter* VictimCharacter = Cast<ACharacter>(OtherActor);
+	if (!VictimCharacter) return;
 
-	//TODO
+	UHurtBoxHandlerComponent* Handler = VictimCharacter->FindComponentByClass<UHurtBoxHandlerComponent>();
+	if (!Handler) return;
+
+	// Step3: 让 Handler 选中最终生效的 BeHitData
+	TArray<UHurtBoxComponent*> Candidates;
+	Candidates.Add(HurtBox);
+
+	const UBeHitData* FinalBeHit = Handler->SelectBeHitBox(Candidates, CurAttackData);
+	if (!FinalBeHit) return;
+
+	// Step4: 调用受击逻辑
+	UCharacterBeHitLogicComponent* BeHitLogic = VictimCharacter->FindComponentByClass<UCharacterBeHitLogicComponent>();
+	if (!BeHitLogic) return;
+
+	FHitResultData Result = BeHitLogic->OnHit(CurAttackData, FinalBeHit, AttackInfo);
 
 	const float TestDamage = CurAttackData->Damage - HurtBox->GetBeHitData()->DefenceDamage;
 	// DebugResult.

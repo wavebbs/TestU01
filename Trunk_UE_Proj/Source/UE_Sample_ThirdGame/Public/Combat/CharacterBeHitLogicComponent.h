@@ -1,28 +1,37 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CombatTypes.h"
 #include "Components/ActorComponent.h"
 #include "CharacterBeHitLogicComponent.generated.h"
 
+class UAttackData;
+class UBeHitData;
+class UCharacterDataComponent;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Combat), meta=(BlueprintSpawnableComponent))
 class UE_SAMPLE_THIRDGAME_API UCharacterBeHitLogicComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
+public:
 	UCharacterBeHitLogicComponent();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	// 引用角色的基础数据组件
+	UPROPERTY()
+	UCharacterDataComponent* CharacterDataComp;
 
-		
+public:
+	/** 受击入口 */
+	UFUNCTION(BlueprintCallable, Category="BeHit")
+	FHitResultData OnHit(const UAttackData* AttackData, const UBeHitData* BeHitData, const FAttackInfo& AttackInfo);
+
+	/** 是否能被打断 */
+	// bool CanInterrupt(const UAttackData* AttackData) const;
+
+	/** 获取最终防御打断等级 */
+	// int32 GetFinalDefenseBreakLevel() const;
 };
