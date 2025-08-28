@@ -95,19 +95,15 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// 更新移动速度
-	if (bIsSprinting && !bIsCrouching)
+	switch (CurrentAnimState)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-	}
-	else if (bIsCrouching)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = CrouchSpeed;
-	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		case ECharacterAnimState::Idle:
+			// 如果进入待机状态，可以停止移动
+			GetCharacterMovement()->StopMovementImmediately();
+			break;
+		
+		default:
+			break;
 	}
 }
 
@@ -272,4 +268,69 @@ void ABaseCharacter::PerformInteraction()
 	}
 
 	OnInteractionPerformed.Broadcast();
+}
+
+void ABaseCharacter::SetAnimationState(ECharacterAnimState NewState)
+{
+    // 如果状态没有变化，直接返回
+    if (CurrentAnimState == NewState)
+    {
+        return;
+    }
+
+    // 保存旧状态用于通知
+    ECharacterAnimState PreviousState = CurrentAnimState;
+    
+    // 更新当前状态
+    CurrentAnimState = NewState;
+    
+    // 根据新状态执行相关逻辑
+    switch (NewState)
+    {
+    case ECharacterAnimState::Idle:
+        // 如果进入待机状态，可以停止移动
+        GetCharacterMovement()->StopMovementImmediately();
+        break;
+        
+    case ECharacterAnimState::Walk:
+        // 设置行走速度
+        GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+        break;
+        
+    case ECharacterAnimState::Run:
+        // 设置奔跑速度
+        GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+        break;
+        
+    case ECharacterAnimState::Jump:
+        // 跳跃逻辑可能已经在Jump()函数中实现
+        break;
+        
+    case ECharacterAnimState::Attack:
+        // 在这里可以添加攻击相关的逻辑
+        break;
+        
+    case ECharacterAnimState::Dodge:
+        // 在这里可以添加闪避相关的逻辑
+        break;
+        
+    case ECharacterAnimState::Death:
+        // 处理角色死亡逻辑
+        // 例如禁用输入，播放死亡动画等
+        GetCharacterMovement()->DisableMovement();
+        break;
+        
+    case ECharacterAnimState::Hit:
+        // 处理受击逻辑
+        break;
+    }
+    
+    // 广播状态改变事件，通知监听者
+    OnAnimStateChanged.Broadcast(PreviousState, CurrentAnimState);
+    
+    // 打印日志，便于调试
+    //UE_LOG(LogTemp, Log, TEXT("%s animation state changed: %s -> %s"),
+     //      *GetName(),
+     //      *UEnum::GetValueAsString(TEXT("ECharacterAnimState"), PreviousState),
+     //      *UEnum::GetValueAsString(TEXT("ECharacterAnimState"), NewState));
 }

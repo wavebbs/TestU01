@@ -266,3 +266,4 @@ void APlayerCharacter::StopSprint()
 		StaminaComponent->StopDrainingStamina();
 	}
 }
+

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterAnimState.h"
 #include "BaseCharacter.generated.h"
 
 // 前向声明
@@ -46,6 +47,37 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* InteractAction;
 
+	
+	
+	// 输入处理函数
+	UFUNCTION()
+	void Move(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnJumpPressed(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnJumpReleased(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnSprintPressed(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnSprintReleased(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnCrouchPressed(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OnInteractPressed(const FInputActionValue& Value);
+
+
+
+public:
+	
 	// 角色组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UHealthComponent* HealthComponent;
@@ -79,31 +111,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	bool bCanJump = true;
 
-	// 输入处理函数
-	UFUNCTION()
-	void Move(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void Look(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void OnJumpPressed(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void OnJumpReleased(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void OnSprintPressed(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void OnSprintReleased(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void OnCrouchPressed(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void OnInteractPressed(const FInputActionValue& Value);
-
+	
 	// 移动逻辑函数
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual void StartSprint();
@@ -133,6 +141,19 @@ protected:
 	UFUNCTION(BlueprintPure, Category = "State")
 	bool CanPerformJump() const { return bCanJump; }
 
+	/** 设置角色动画状态 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	virtual void SetAnimationState(ECharacterAnimState NewState);
+
+	/** 获取当前动画状态 */
+	UFUNCTION(BlueprintPure, Category = "Animation")
+	ECharacterAnimState GetAnimationState() const { return CurrentAnimState; }
+
+	/** 动画状态改变事件 */
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimStateChanged, ECharacterAnimState, PreviousState, ECharacterAnimState, NewState);
+	UPROPERTY(BlueprintAssignable, Category = "Events|Animation")
+	FOnAnimStateChanged OnAnimStateChanged;
+
 	// 事件委托
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSprintChanged);
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -149,8 +170,7 @@ protected:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionPerformed);
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnInteractionPerformed OnInteractionPerformed;
-
-public:
+	
 	virtual void Tick(float DeltaTime) override;
 
 	// 获取组件引用
@@ -159,4 +179,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Components")
 	UStaminaComponent* GetStaminaComponent() const { return StaminaComponent; }
+
+	/** 当前角色动画状态 */
+	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	ECharacterAnimState CurrentAnimState = ECharacterAnimState::Idle;
 };

@@ -10,7 +10,8 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"StateTreeModule"
+				"StateTreeModule",
+				"AIModule"
 			]
 		}
 	],
@@ -33,6 +34,10 @@
 		},
 		{
 			"Name": "ChaosClothAssetEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "GeneSplicer",
 			"Enabled": true
 		}
 	]
