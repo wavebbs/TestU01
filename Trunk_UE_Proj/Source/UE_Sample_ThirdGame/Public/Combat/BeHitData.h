@@ -11,10 +11,10 @@ public:
     float DefenceDamage = 0.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BeHit")
-    float FinalDamage = 0.f;
+    float KnockbackDefence = 10.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BeHit")
-    float StiffTime = 0.f;
+    float StunTimeDefence = 0.5f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BeHit")
     bool bIsKnockDown = false;

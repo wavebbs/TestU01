@@ -1,12 +1,13 @@
+#pragma once
 #include "CharacterData.generated.h"
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
 class UCharacterData : public UObject
 {
     GENERATED_BODY()
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Character")
-    float MaxHP = 100.f;
+    float MaxHP = 1000.f;
 
     UPROPERTY(BlueprintReadWrite, Category="Character")
     float CurrentHP = 100.f;

@@ -9,8 +9,6 @@
 #include "AttackHitBoxComponent.generated.h"
 
 
-struct FAttackInfo;
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_SAMPLE_THIRDGAME_API UAttackHitBoxComponent : public UBoxComponent
 {
