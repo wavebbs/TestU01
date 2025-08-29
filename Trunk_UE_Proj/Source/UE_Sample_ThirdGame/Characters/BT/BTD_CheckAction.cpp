@@ -4,6 +4,11 @@
 #include "AIController.h"
 #include "Characters/BaseCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Characters/PlayerCharacter.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Characters/BasePlayerController.h"
+#include "GameFramework/Controller.h"
 
 UBTD_CheckAction::UBTD_CheckAction()
 {
@@ -12,23 +17,35 @@ UBTD_CheckAction::UBTD_CheckAction()
 
 bool UBTD_CheckAction::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
-	AAIController* AIController = OwnerComp.GetAIOwner();
-	if (!AIController)
+	ABasePlayerController* actor = Cast<ABasePlayerController>(	OwnerComp.GetOwner());
+	if (!actor)
 	{
 		return false;
 	}
 
-	ABaseCharacter* Character = Cast<ABaseCharacter>(AIController->GetPawn());
+	APlayerCharacter* Character = Cast<APlayerCharacter>(actor->GetPawn());
 	if (!Character)
 	{
 		return false;
 	}
+	if (!CAction)
+	{
+		return false;
+	}
 
-	// 在这里添加您的具体条件检查逻辑
-	// 例如：检查角色的某个状态
-	// bool bCondition = Character->IsInAction();
-	// return bCondition;
+	
+	
+	return Character->CheckAction(CAction);
+	
 
-	// 作为示例，暂时返回 true
-	return true;
 }
+
+FString UBTD_CheckAction::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Check if action %s is active"), *GetNameSafe(CAction));
+}
+
+// FName UBTD_CheckAction::GetNodeIconName() const
+// {
+// 	return FName((TEXT("Check if action %s is active"), *GetNameSafe(CAction)));
+// }

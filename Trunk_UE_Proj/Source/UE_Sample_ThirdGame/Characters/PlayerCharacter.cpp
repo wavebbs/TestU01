@@ -46,6 +46,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// 设置增强输入组件
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		
 		// 绑定攻击输入
 		if (AttackAction)
 		{
@@ -92,6 +93,64 @@ void APlayerCharacter::Tick(float DeltaTime)
 			StaminaComponent->StartDrainingStamina();
 		}
 	}
+}
+
+bool APlayerCharacter::CheckAction(UInputAction* Action) const
+{
+	if (!Action)
+	{
+		return false;
+	}
+
+	// 获取玩家控制器
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC)
+	{
+		return false;
+	}
+
+	// 获取增强输入子系统
+	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+	if (!InputSubsystem)
+	{
+		return false;
+	}
+
+	// 获取增强玩家输入
+	UEnhancedPlayerInput* EnhancedPlayerInput = InputSubsystem->GetPlayerInput();
+	if (!EnhancedPlayerInput)
+	{
+		return false;
+	}
+
+	// 获取动作值并检查是否被触发
+	FInputActionValue ActionValue = EnhancedPlayerInput->GetActionValue(Action);
+	
+	// 根据动作类型检查是否被触发
+	// 对于布尔类型的动作，检查是否为true
+	if (Action->ValueType == EInputActionValueType::Boolean)
+	{
+		return ActionValue.Get<bool>();
+	}
+	// 对于数值类型的动作，检查是否大于阈值
+	else if (Action->ValueType == EInputActionValueType::Axis1D)
+	{
+		return FMath::Abs(ActionValue.Get<float>()) > 0.1f;
+	}
+	// 对于2D向量类型的动作，检查向量长度
+	else if (Action->ValueType == EInputActionValueType::Axis2D)
+	{
+		FVector2D Value2D = ActionValue.Get<FVector2D>();
+		return Value2D.SizeSquared() > 0.1f;
+	}
+	// 对于3D向量类型的动作，检查向量长度
+	else if (Action->ValueType == EInputActionValueType::Axis3D)
+	{
+		FVector Value3D = ActionValue.Get<FVector>();
+		return Value3D.SizeSquared() > 0.1f;
+	}
+
+	return false;
 }
 
 void APlayerCharacter::OnAttackPressed(const FInputActionValue& Value)
@@ -266,4 +325,3 @@ void APlayerCharacter::StopSprint()
 		StaminaComponent->StopDrainingStamina();
 	}
 }
-

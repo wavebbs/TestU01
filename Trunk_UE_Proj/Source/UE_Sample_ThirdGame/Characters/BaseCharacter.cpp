@@ -9,6 +9,7 @@
 #include "DrawDebugHelpers.h"
 #include "Interfaces/InteractableInterface.h"
 #include "Components/CapsuleComponent.h"
+#include  "Characters/BasePlayerController.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -31,9 +32,9 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	PlayerController = Cast<ABasePlayerController>(Controller);
 	// 设置输入映射上下文
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	if (PlayerController)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
@@ -43,6 +44,7 @@ void ABaseCharacter::BeginPlay()
 			}
 		}
 	}
+
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -95,7 +97,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	switch (CurrentAnimState)
+	switch (CurrentState)
 	{
 		case ECharacterAnimState::Idle:
 			// 如果进入待机状态，可以停止移动
@@ -273,16 +275,16 @@ void ABaseCharacter::PerformInteraction()
 void ABaseCharacter::SetAnimationState(ECharacterAnimState NewState)
 {
     // 如果状态没有变化，直接返回
-    if (CurrentAnimState == NewState)
+    if (CurrentState == NewState)
     {
         return;
     }
 
     // 保存旧状态用于通知
-    ECharacterAnimState PreviousState = CurrentAnimState;
+    ECharacterAnimState PreviousState = CurrentState;
     
     // 更新当前状态
-    CurrentAnimState = NewState;
+    CurrentState = NewState;
     
     // 根据新状态执行相关逻辑
     switch (NewState)
@@ -326,11 +328,21 @@ void ABaseCharacter::SetAnimationState(ECharacterAnimState NewState)
     }
     
     // 广播状态改变事件，通知监听者
-    OnAnimStateChanged.Broadcast(PreviousState, CurrentAnimState);
+    OnAnimStateChanged.Broadcast(PreviousState, CurrentState);
     
     // 打印日志，便于调试
     //UE_LOG(LogTemp, Log, TEXT("%s animation state changed: %s -> %s"),
      //      *GetName(),
      //      *UEnum::GetValueAsString(TEXT("ECharacterAnimState"), PreviousState),
      //      *UEnum::GetValueAsString(TEXT("ECharacterAnimState"), NewState));
+}
+
+
+void ABaseCharacter::ChangeBPState(ECharacterAnimState NewState)
+{
+	CurrentState = NewState;
+	// 调用设置动画状态函数
+	SetAnimationState(NewState);
+
+	PlayerController->GetBlackboardComponent()->SetValueAsEnum(FName("CurrentState"), (uint8)NewState);	
 }

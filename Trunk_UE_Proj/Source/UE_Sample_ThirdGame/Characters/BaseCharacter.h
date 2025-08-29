@@ -10,6 +10,8 @@ class UInputMappingContext;
 class UInputAction;
 class UHealthComponent;
 class UStaminaComponent;
+class ABaseAIController;
+class ABasePlayerController;
 struct FInputActionValue;
 
 UCLASS()
@@ -23,7 +25,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
+	
 	// 输入映射上下文
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputMappingContext* DefaultMappingContext;
@@ -85,6 +87,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaminaComponent* StaminaComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	ABasePlayerController* PlayerController;
+	
 	// 移动参数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float WalkSpeed = 400.0f;
@@ -141,13 +146,16 @@ public:
 	UFUNCTION(BlueprintPure, Category = "State")
 	bool CanPerformJump() const { return bCanJump; }
 
+	UFUNCTION(BlueprintCallable, Category = "State")
+	virtual void ChangeBPState(ECharacterAnimState NewState);
+	
 	/** 设置角色动画状态 */
 	UFUNCTION(BlueprintCallable, Category = "Animation")
 	virtual void SetAnimationState(ECharacterAnimState NewState);
 
 	/** 获取当前动画状态 */
 	UFUNCTION(BlueprintPure, Category = "Animation")
-	ECharacterAnimState GetAnimationState() const { return CurrentAnimState; }
+	ECharacterAnimState GetAnimationState() const { return CurrentState; }
 
 	/** 动画状态改变事件 */
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimStateChanged, ECharacterAnimState, PreviousState, ECharacterAnimState, NewState);
@@ -182,5 +190,7 @@ public:
 
 	/** 当前角色动画状态 */
 	UPROPERTY(BlueprintReadOnly, Category = "Animation")
-	ECharacterAnimState CurrentAnimState = ECharacterAnimState::Idle;
+	ECharacterAnimState CurrentState = ECharacterAnimState::Idle;
+
+	
 };

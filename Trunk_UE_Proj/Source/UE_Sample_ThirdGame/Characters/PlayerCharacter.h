@@ -97,7 +97,9 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
-
+	
+	UFUNCTION(BlueprintPure, Category = "Player State")
+	bool CheckAction(UInputAction* Action) const;
 	// 状态检查函数
 	UFUNCTION(BlueprintPure, Category = "Player State")
 	bool IsAttacking() const { return bIsAttacking; }
