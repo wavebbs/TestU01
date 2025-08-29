@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "CharacterAnimState.h"
+#include "Enum/CharacterEnumDefine.h"
 #include "BaseCharacter.generated.h"
 
 // 前向声明

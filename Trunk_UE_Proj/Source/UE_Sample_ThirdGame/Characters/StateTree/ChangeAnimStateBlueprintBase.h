@@ -6,7 +6,7 @@
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
 #include "StateTreeExecutionContext.h"
 #include "Characters/BaseCharacter.h"
-#include "Characters/CharacterAnimState.h"
+#include "Characters/Enum/CharacterEnumDefine.h"
 #include "ChangeAnimStateBlueprintBase.generated.h"
 
 /**
