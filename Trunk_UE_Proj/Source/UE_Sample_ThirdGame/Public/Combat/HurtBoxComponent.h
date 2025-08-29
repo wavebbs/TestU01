@@ -22,6 +22,10 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+public:
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
+
+protected:
 	// 受击框配置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="HurtBox")
 	UBeHitData* BeHitData;

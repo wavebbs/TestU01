@@ -53,4 +53,8 @@ private:
 	int32 OtherBodyIndex,
 	bool bFromSweep,
 	const FHitResult& SweepResult);
+	void ProcessPendingHits();
+
+	UPROPERTY()
+	TArray<FPendingHitData> PendingHits;
 };

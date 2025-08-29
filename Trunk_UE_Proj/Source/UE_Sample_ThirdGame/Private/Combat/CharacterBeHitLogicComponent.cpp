@@ -54,7 +54,7 @@ FHitResultData UCharacterBeHitLogicComponent::OnHit(
     if (HitStopSys)
     {
         HitStopSys->ApplyHitStop(0.05f, GetOwner());
-    }
+    } 
     
     // 4. 组织结果
     Result.Attacker = AttackInfo.Attacker;

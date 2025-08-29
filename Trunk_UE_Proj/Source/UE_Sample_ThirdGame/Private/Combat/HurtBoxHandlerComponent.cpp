@@ -35,20 +35,21 @@ void UHurtBoxHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// ...
 }
 
-void UHurtBoxHandlerComponent::RegisterHurtBox(UHurtBoxComponent* HurtBox)
+void UHurtBoxHandlerComponent::RegisterHurtBox(UHurtBoxComponent* HurtBox, const UBeHitData* InHitData)
 {
 	if (HurtBox && !HurtBoxes.Contains(HurtBox))
 	{
-		HurtBoxes.Add(HurtBox);
+		HurtBoxes.Add(HurtBox, InHitData);
 	}
 }
 
-void UHurtBoxHandlerComponent::UnregisterHurtBox(UHurtBoxComponent* HurtBox)
+void UHurtBoxHandlerComponent::UnregisterHurtBox(const UHurtBoxComponent* HurtBox)
 {
 	HurtBoxes.Remove(HurtBox);
 }
 
-const UBeHitData* UHurtBoxHandlerComponent::SelectBeHitBox(const TArray<UHurtBoxComponent*>& Candidates,
+const UBeHitData* UHurtBoxHandlerComponent::SelectBeHitBox(const FVector InHitLocation,
+                                                           const TArray<UHurtBoxComponent*>& Candidates,
                                                            const UAttackData* AttackData) const
 {
 	if (Candidates.Num() == 0 || !AttackData)
@@ -56,12 +57,42 @@ const UBeHitData* UHurtBoxHandlerComponent::SelectBeHitBox(const TArray<UHurtBox
 		return nullptr;
 	}
 
-	// Test one be hurt box.
-	if (Candidates.Num() > 0)
+	const UBeHitData* Result = nullptr;
+	float BestDistance = FLT_MAX;
+
+	UHurtBoxComponent* bestHurtBox = nullptr;
+	
+	for (UHurtBoxComponent* HurtBox : Candidates)
 	{
-		return  Candidates[0]->GetBeHitData();
+		if (const UBeHitData* const* Found = HurtBoxes.Find(HurtBox))
+		{
+			const UBeHitData* Data = *Found;
+			if (!Data) continue;
+			
+			FVector Center = HurtBox->GetComponentLocation();
+			const float CurDistance = FVector::DistSquared(InHitLocation, Center);
+
+			// Distance 
+			const bool bBetter = CurDistance < BestDistance;
+			
+			if (bBetter)
+			{
+				BestDistance = CurDistance;
+				Result = Data;
+				bestHurtBox = HurtBox;
+			}
+		}
 	}
 
-	return nullptr;
+	// 高亮最近的 HurtBox
+	for (UHurtBoxComponent* hurtBox : Candidates)
+	{
+		if (hurtBox)
+		{
+			hurtBox->SetRenderCustomDepth(hurtBox == bestHurtBox);
+		}
+	}
+
+	return Result;
 }
 

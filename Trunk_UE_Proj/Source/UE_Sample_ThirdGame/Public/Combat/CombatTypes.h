@@ -46,3 +46,18 @@ struct FHitResultData
 	// UPROPERTY(BlueprintReadWrite, Category="HitResult")
 	// EBeHitType BeHitType;
 };
+
+USTRUCT()
+struct FPendingHitData
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    AActor* OtherActor = nullptr;
+
+    UPROPERTY()
+    UPrimitiveComponent* OtherComp = nullptr;
+
+    UPROPERTY()
+    FHitResult SweepResult;
+};

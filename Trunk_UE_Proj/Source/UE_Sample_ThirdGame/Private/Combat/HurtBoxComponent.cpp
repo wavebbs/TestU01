@@ -3,6 +3,8 @@
 
 #include "Combat/HurtBoxComponent.h"
 
+#include "Combat/HurtBoxHandlerComponent.h"
+
 // Sets default values for this component's properties
 UHurtBoxComponent::UHurtBoxComponent()
 {
@@ -19,8 +21,27 @@ void UHurtBoxComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	if (AActor* Owner = GetOwner())
+	{
+		if (UHurtBoxHandlerComponent* Handler = Owner->FindComponentByClass<UHurtBoxHandlerComponent>())
+		{
+			Handler->RegisterHurtBox(this, BeHitData); // Register.
+		}
+	}
 	
+}
+
+void UHurtBoxComponent::EndPlay(EEndPlayReason::Type Reason)
+{
+	if (AActor* Owner = GetOwner())
+	{
+		if (UHurtBoxHandlerComponent* Handler = Owner->FindComponentByClass<UHurtBoxHandlerComponent>())
+		{
+			Handler->UnregisterHurtBox(this); //Unregister.
+		}
+	}
+	
+	Super::EndPlay(Reason);
 }
 
 

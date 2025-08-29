@@ -26,20 +26,19 @@ protected:
 
 	// 管理角色身上的所有 HurtBox
 	UPROPERTY(BlueprintReadWrite, Category="HurtBox")
-	TArray<UHurtBoxComponent*> HurtBoxes;
+	TMap<UHurtBoxComponent*, const UBeHitData*> HurtBoxes;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// 注册/注销 HurtBox
-	void RegisterHurtBox(UHurtBoxComponent* HurtBox);
-	void UnregisterHurtBox(UHurtBoxComponent* HurtBox);
+	void RegisterHurtBox(UHurtBoxComponent* HurtBox, const UBeHitData* InHitData);
+	void UnregisterHurtBox(const UHurtBoxComponent* HurtBox);
 
 	// 按优先级筛选最终生效的受击框
 	UFUNCTION(BlueprintCallable, Category="HurtBox")
-	const UBeHitData* SelectBeHitBox(
-		const TArray<UHurtBoxComponent*>& Candidates,
+	const UBeHitData* SelectBeHitBox(FVector InHitLocation, const TArray<UHurtBoxComponent*>& Candidates,
 		const UAttackData* AttackData) const;
 
  };

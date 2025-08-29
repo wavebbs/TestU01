@@ -59,54 +59,114 @@ void UAttackHitBoxComponent::BeginAttackWindow(UAttackData* InData, FAttackInfo&
 	if (!OnComponentBeginOverlap.IsAlreadyBound(this, &UAttackHitBoxComponent::OnHitBoxOverlap))
 	{
 		OnComponentBeginOverlap.AddDynamic(this, &UAttackHitBoxComponent::OnHitBoxOverlap);
-		
 	}
 }
 
 void UAttackHitBoxComponent::EndAttackWindow()
 {
-	SetGenerateOverlapEvents(false);
-	UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CurAttackData = nullptr;
+    SetGenerateOverlapEvents(false);
+    UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    // CurAttackData = nullptr;
+
+    // 新逻辑：统一处理收集到的碰撞
+    ProcessPendingHits();
+    PendingHits.Empty();
+    CurAttackData = nullptr;
 }
 
 void UAttackHitBoxComponent::OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("AttackData Damage: start"));
-	// if (!CurAttackData || !OtherComp || !OtherActor)
-	if (!CurAttackData || !OtherComp || !OtherActor || OtherActor == GetOwner())
-	{
-		return;
-	}
-		
-	// Step1: 判断是否是 HurtBox
-	UHurtBoxComponent* HurtBox = Cast<UHurtBoxComponent>(OtherComp);
-	if (!HurtBox) return;
-	
-	// Step2: 获取角色身上的 Handler
-	ACharacter* VictimCharacter = Cast<ACharacter>(OtherActor);
-	if (!VictimCharacter) return;
-
-	UHurtBoxHandlerComponent* Handler = VictimCharacter->FindComponentByClass<UHurtBoxHandlerComponent>();
-	if (!Handler) return;
-
-	// Step3: 让 Handler 选中最终生效的 BeHitData
-	TArray<UHurtBoxComponent*> Candidates;
-	Candidates.Add(HurtBox);
-
-	const UBeHitData* FinalBeHit = Handler->SelectBeHitBox(Candidates, CurAttackData);
-	if (!FinalBeHit) return;
-
-	// Step4: 调用受击逻辑
-	UCharacterBeHitLogicComponent* BeHitLogic = VictimCharacter->FindComponentByClass<UCharacterBeHitLogicComponent>();
-	if (!BeHitLogic) return;
-
-	FHitResultData Result = BeHitLogic->OnHit(CurAttackData, FinalBeHit, AttackInfo);
-
-	const float TestDamage = CurAttackData->Damage - HurtBox->GetBeHitData()->DefenceDamage;
-	// DebugResult.
-	UE_LOG(LogTemp, Log, TEXT("AttackData Damage: %f - DefenceDamage %f = Result Damage : %f"), CurAttackData->Damage, HurtBox->GetBeHitData()->DefenceDamage, TestDamage);
-
+    // 收集数据
+    if (!CurAttackData || !OtherComp || !OtherActor || OtherActor == GetOwner())
+    {
+        return;
+    }
+    FPendingHitData HitData;
+    HitData.OtherActor = OtherActor;
+    HitData.OtherComp = OtherComp;
+    HitData.SweepResult = SweepResult;
+    PendingHits.Add(HitData);
 }
 
+void UAttackHitBoxComponent::ProcessPendingHits()
+{
+    if (!CurAttackData)
+    {
+        return;
+    }
+
+    TArray<UHurtBoxComponent*> candidates;
+    TMap<UHurtBoxComponent*, ACharacter*> hurtBoxToCharacter;
+
+    // 收集所有合法的HurtBox和对应的VictimCharacter
+    for (const FPendingHitData& hitData : PendingHits)
+    {
+        UHurtBoxComponent* hurtBox = Cast<UHurtBoxComponent>(hitData.OtherComp);
+        if (!hurtBox) continue;
+
+        ACharacter* victimCharacter = Cast<ACharacter>(hitData.OtherActor);
+        if (!victimCharacter) continue;
+
+        candidates.AddUnique(hurtBox);
+        hurtBoxToCharacter.Add(hurtBox, victimCharacter);
+    }
+
+    if (candidates.Num() == 0)
+    {
+        return;
+    }
+
+    FVector hitPoint = GetOwner()->GetActorLocation();
+    UE_LOG(LogTemp, Warning, TEXT("HitPoint Attack Test: (%s)"), *hitPoint.ToString());
+
+    // 以第一个VictimCharacter查找Handler（假设同一批HurtBox属于同一角色）
+    UHurtBoxHandlerComponent* handler = nullptr;
+    if (ACharacter* firstVictim = hurtBoxToCharacter.FindRef(candidates[0]))
+    {
+        handler = firstVictim->FindComponentByClass<UHurtBoxHandlerComponent>();
+    }
+    if (!handler)
+    {
+        return;
+    }
+
+    const UBeHitData* finalBeHit = handler->SelectBeHitBox(hitPoint, candidates, CurAttackData);
+    if (!finalBeHit)
+    {
+        return;
+    }
+
+    // 找到最优HurtBox对应的VictimCharacter
+    UHurtBoxComponent* bestHurtBox = nullptr;
+    for (UHurtBoxComponent* hurtBox : candidates)
+    {
+        if (handler->SelectBeHitBox(hitPoint, {hurtBox}, CurAttackData) == finalBeHit)
+        {
+            bestHurtBox = hurtBox;
+            break;
+        }
+    }
+    if (!bestHurtBox)
+    {
+        return;
+    }
+
+    ACharacter* victimCharacter = hurtBoxToCharacter.FindRef(bestHurtBox);
+    if (!victimCharacter)
+    {
+        return;
+    }
+
+    UCharacterBeHitLogicComponent* beHitLogic = victimCharacter->FindComponentByClass<UCharacterBeHitLogicComponent>();
+    if (!beHitLogic)
+    {
+        return;
+    }
+
+    FHitResultData result = beHitLogic->OnHit(CurAttackData, finalBeHit, AttackInfo);
+
+    const float testDamage = CurAttackData->Damage - finalBeHit->DefenceDamage;
+    UE_LOG(LogTemp, Log, TEXT("Damage Attack Test: %f - DefenceDamage %f = Result Damage : %f"), CurAttackData->Damage, finalBeHit->DefenceDamage, testDamage);
+}
