@@ -10,6 +10,7 @@
 #include "Interfaces/InteractableInterface.h"
 #include "Components/CapsuleComponent.h"
 #include  "Characters/BasePlayerController.h"
+#include "Game/MyCharacterManager.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -41,6 +42,17 @@ void ABaseCharacter::BeginPlay()
 			if (DefaultMappingContext)
 			{
 				Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			}
+		}
+	}
+
+	if (const UWorld* World = GetWorld())
+	{
+		if (const UGameInstance* GameInstance = World->GetGameInstance())
+		{
+			if (UMyCharacterManager* CharacterManager = GameInstance->GetSubsystem<UMyCharacterManager>())
+			{
+				CharacterManager->RegisterCharacter(this);
 			}
 		}
 	}
