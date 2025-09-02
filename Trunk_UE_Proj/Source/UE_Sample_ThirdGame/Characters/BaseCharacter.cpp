@@ -13,6 +13,7 @@
 #include "Characters/CharacterAnimInstanceBase.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Game/MyCharacterManager.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -49,6 +50,17 @@ void ABaseCharacter::BeginPlay()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("BaseCharacter: Failed to get Animation Blueprint instance"));
 		}
+
+	if (const UWorld* World = GetWorld())
+	{
+		if (const UGameInstance* GameInstance = World->GetGameInstance())
+		{
+			if (UMyCharacterManager* CharacterManager = GameInstance->GetSubsystem<UMyCharacterManager>())
+			{
+				CharacterManager->RegisterCharacter(this);
+			}
+		}
+	}
 	}
 	
 	
