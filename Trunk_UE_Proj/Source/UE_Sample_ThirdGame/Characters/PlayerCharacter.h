@@ -16,6 +16,9 @@ class UE_SAMPLE_THIRDGAME_API APlayerCharacter : public ABaseCharacter
 public:
 	APlayerCharacter();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	ABasePlayerController* PlayerController;
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
@@ -68,5 +71,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Camera")
 	USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
+	virtual void ChangeBPState(ECharacterAnimState NewState) override;
 	
 };

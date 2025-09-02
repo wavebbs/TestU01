@@ -77,10 +77,16 @@ void UCharacterAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 
 void UCharacterAnimInstanceBase::SetCurrentAnimState(ECharacterAnimState NewState)
 {
+	// 如果状态没有变化，直接返回
+	if (CurrentState == NewState)
+	{
+		return;
+	}
+	
 	CurrentState = NewState;
 }
 
-bool UCharacterAnimInstanceBase::CheckState(ECharacterAnimState State)
+bool UCharacterAnimInstanceBase::CheckState(ECharacterAnimState State) const
 {
 	return CurrentState == State;
 }

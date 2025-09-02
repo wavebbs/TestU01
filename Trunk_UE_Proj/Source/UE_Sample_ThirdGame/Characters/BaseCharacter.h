@@ -71,8 +71,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaminaComponent* StaminaComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	ABasePlayerController* PlayerController;
+
 	
 	// 移动参数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")

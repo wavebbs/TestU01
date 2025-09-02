@@ -9,7 +9,7 @@
 #include "DrawDebugHelpers.h"
 #include "Interfaces/InteractableInterface.h"
 #include "Components/CapsuleComponent.h"
-#include "Characters/BasePlayerController.h"
+
 #include "Characters/CharacterAnimInstanceBase.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -36,7 +36,7 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerController = Cast<ABasePlayerController>(Controller);
+
 	
 	// 初始化动画蓝图实例
 	if (GetMesh())
@@ -186,5 +186,5 @@ void ABaseCharacter::ChangeBPState(ECharacterAnimState NewState)
 	
 	CurrentState = NewState;
 
-	PlayerController->GetBlackboardComponent()->SetValueAsEnum(FName("CurrentState"), (uint8)NewState);	
+
 }

@@ -9,6 +9,7 @@
 #include "Components/StaminaComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "BaseplayerController.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -37,6 +38,19 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	PlayerController = Cast<ABasePlayerController>(Controller);
+
+	if (PlayerController)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			if (DefaultMappingContext)
+			{
+				Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			}
+		}
+	}
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -162,4 +176,8 @@ void APlayerCharacter::OnMove(const FInputActionValue& Value)
 	}
 }
 
-
+void APlayerCharacter::ChangeBPState(ECharacterAnimState NewState)
+{
+	Super::ChangeBPState(NewState);
+	PlayerController->GetBlackboardComponent()->SetValueAsEnum(FName("CurrentState"), (uint8)NewState);	
+}

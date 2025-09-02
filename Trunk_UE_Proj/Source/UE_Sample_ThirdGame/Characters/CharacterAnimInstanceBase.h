@@ -76,7 +76,7 @@ public:
 	void SetCurrentAnimState(ECharacterAnimState NewState);
 	
 	UFUNCTION(BlueprintPure, Category = "Animation")
-	bool CheckState(ECharacterAnimState NewState);
+	bool CheckState(ECharacterAnimState NewState) const;
 
 private:
 	// 上一帧的Yaw值，用于计算YawDelta
