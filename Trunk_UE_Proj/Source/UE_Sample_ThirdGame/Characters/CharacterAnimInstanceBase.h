@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Enum/CharacterEnumDefine.h"
 #include "CharacterAnimInstanceBase.generated.h"
 
 /**
@@ -59,11 +60,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	bool IsMoving() const { return bIsMoving; }
 
+	/** 当前动画蓝图角色状态 */
+	UPROPERTY(BlueprintReadOnly, Category = "Animation")
+	ECharacterAnimState CurrentState = ECharacterAnimState::Idle;
+
+	
 	// Tick 更新动画属性
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	// 初始化动画
 	virtual void NativeInitializeAnimation() override;
+
+	// 切换动画状态
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void SetCurrentAnimState(ECharacterAnimState NewState);
+	
+	UFUNCTION(BlueprintPure, Category = "Animation")
+	bool CheckState(ECharacterAnimState NewState);
 
 private:
 	// 上一帧的Yaw值，用于计算YawDelta

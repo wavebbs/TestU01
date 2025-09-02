@@ -74,3 +74,13 @@ void UCharacterAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 		
 	}
 }
+
+void UCharacterAnimInstanceBase::SetCurrentAnimState(ECharacterAnimState NewState)
+{
+	CurrentState = NewState;
+}
+
+bool UCharacterAnimInstanceBase::CheckState(ECharacterAnimState State)
+{
+	return CurrentState == State;
+}
