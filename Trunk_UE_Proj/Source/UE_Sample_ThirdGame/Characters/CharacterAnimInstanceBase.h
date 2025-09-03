@@ -78,6 +78,22 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Animation")
 	bool CheckState(ECharacterAnimState NewState) const;
 
+	// 查询指定名称的动画播放进度
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
+	float GetAnimationProgress(const FString& AnimationName) const;
+
+	// 检查指定动画是否正在播放
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
+	bool IsAnimationPlaying(const FString& AnimationName) const;
+
+	// 检查指定动画是否已完成播放（进度 > 1.0）
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
+	bool IsAnimationCompleted(const FString& AnimationName) const;
+
+	// 根据动画蒙太奇获取播放进度
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
+	float GetMontageProgress(UAnimMontage* Montage) const;
+
 private:
 	// 上一帧的Yaw值，用于计算YawDelta
 	float PreviousYaw;

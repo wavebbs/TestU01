@@ -90,3 +90,72 @@ bool UCharacterAnimInstanceBase::CheckState(ECharacterAnimState State) const
 {
 	return CurrentState == State;
 }
+
+float UCharacterAnimInstanceBase::GetAnimationProgress(const FString& AnimationName) const
+{
+	// 遍历所有正在播放的蒙太奇，查找匹配名称的动画
+	//const TArray<FAnimMontageInstance*>& MontageInstances = GetActiveMontageInstances();
+	
+	for (const FAnimMontageInstance* MontageInstance : MontageInstances)
+	{
+		if (MontageInstance && MontageInstance->Montage)
+		{
+			// 检查蒙太奇名称是否匹配
+			FString MontageName = MontageInstance->Montage->GetName();
+			if (MontageName.Contains(AnimationName))
+			{
+				// 计算播放进度：当前位置 / 总长度
+				float CurrentPosition = MontageInstance->GetPosition();
+				float TotalLength = MontageInstance->Montage->GetPlayLength();
+				
+				if (TotalLength > 0.0f)
+				{
+					return CurrentPosition / TotalLength;
+				}
+			}
+		}
+	}
+	
+	// 如果没有找到匹配的动画，返回 -1 表示未播放
+	return -1.0f;
+}
+
+bool UCharacterAnimInstanceBase::IsAnimationPlaying(const FString& AnimationName) const
+{
+	float Progress = GetAnimationProgress(AnimationName);
+	return Progress >= 0.0f && Progress <= 1.0f;
+}
+
+bool UCharacterAnimInstanceBase::IsAnimationCompleted(const FString& AnimationName) const
+{
+	float Progress = GetAnimationProgress(AnimationName);
+	return Progress > 1.0f;
+}
+
+float UCharacterAnimInstanceBase::GetMontageProgress(UAnimMontage* Montage) const
+{
+	if (!Montage)
+	{
+		return -1.0f;
+	}
+	
+	// 查找指定蒙太奇的播放实例
+	//const TArray<FAnimMontageInstance*>& MontageInstances = GetActiveMontageInstances();
+	
+	for (const FAnimMontageInstance* MontageInstance : MontageInstances)
+	{
+		if (MontageInstance && MontageInstance->Montage == Montage)
+		{
+			// 计算播放进度
+			float CurrentPosition = MontageInstance->GetPosition();
+			float TotalLength = Montage->GetPlayLength();
+			
+			if (TotalLength > 0.0f)
+			{
+				return CurrentPosition / TotalLength;
+			}
+		}
+	}
+	
+	return -1.0f;
+}

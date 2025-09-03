@@ -50,6 +50,20 @@ void APlayerCharacter::BeginPlay()
 				Subsystem->AddMappingContext(DefaultMappingContext, 0);
 			}
 		}
+		
+		
+
+		// 获取增强输入子系统
+		UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (!InputSubsystem)
+		{
+			return;
+		}
+
+		// 获取增强玩家输入
+		EnhancedPlayerInput = InputSubsystem->GetPlayerInput();
+
+
 	}
 }
 
@@ -82,51 +96,67 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	
 		// 绑定移动输入
-		if (MoveAction)
+		// if (MoveAction)
+		// {
+		// 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnMove);
+		// }
+
+		if (LookAction)
 		{
-			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnMove);
+			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
 		}
 	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	//Super::Tick(DeltaTime);
 
-	
+	switch (CurrentState)
+	{
+		case ECharacterAnimState::Idle:
+			// 如果进入待机状态，可以停止移动
+			GetCharacterMovement()->StopMovementImmediately();
+			break;
+		case ECharacterAnimState::Walk:
+			// 设置行走速度
+			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+			break;
+		case ECharacterAnimState::Run:
+			// 设置奔跑速度
+			GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+			OnMoveUpdate();
+		case ECharacterAnimState::Jump:
+			OnMoveUpdate();
+			break;
+		default:
+			break;
+	}
 }
 
-bool APlayerCharacter::CheckAction(UInputAction* Action) const
+bool APlayerCharacter::CheckAction(UInputAction* Action, bool Anykey) const
 {
 	if (!Action)
 	{
 		return false;
 	}
 
-	// 获取玩家控制器
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	if (!PC)
-	{
-		return false;
-	}
-
-	// 获取增强输入子系统
-	UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
-	if (!InputSubsystem)
-	{
-		return false;
-	}
-
-	// 获取增强玩家输入
-	UEnhancedPlayerInput* EnhancedPlayerInput = InputSubsystem->GetPlayerInput();
-	if (!EnhancedPlayerInput)
-	{
-		return false;
-	}
 
 	// 获取动作值并检查是否被触发
 	FInputActionValue ActionValue = EnhancedPlayerInput->GetActionValue(Action);
-	
+
+
+	if (Anykey)
+	{
+		if (ActionValue.IsNonZero())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 	// 根据动作类型检查是否被触发
 	// 对于布尔类型的动作，检查是否为true
 	if (Action->ValueType == EInputActionValueType::Boolean)
@@ -155,29 +185,120 @@ bool APlayerCharacter::CheckAction(UInputAction* Action) const
 }
 
 
-
-
-void APlayerCharacter::OnMove(const FInputActionValue& Value)
+//
+//
+void APlayerCharacter::OnMoveUpdate()
 {
+
+	// 动作值并检查是否被触发
+	FInputActionValue ActionValue = EnhancedPlayerInput->GetActionValue(MoveAction);
 	// 获取输入向量
-	FVector2D MovementVector = Value.Get<FVector2D>();
-	if (Controller && (MovementVector.X != 0.f || MovementVector.Y != 0.f))
-	{
-		// 获取控制器旋转（通常为相机朝向）
-		const FRotator YawRotation(0, Controller->GetControlRotation().Yaw, 0);
+	FVector2D MovementVector = ActionValue.Get<FVector2D>();
 
-		// 计算前后/左右方向
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		// 应用移动（确保方向与动画一致）
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
-	}
+	Super::Move(MovementVector);
 }
 
 void APlayerCharacter::ChangeBPState(ECharacterAnimState NewState)
 {
 	Super::ChangeBPState(NewState);
 	PlayerController->GetBlackboardComponent()->SetValueAsEnum(FName("CurrentState"), (uint8)NewState);	
+}
+
+void APlayerCharacter::Look(const FInputActionValue& Value)
+{
+	const FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	if (Controller != nullptr)
+	{
+		// 添加Yaw旋转（左右看）
+		AddControllerYawInput(LookAxisVector.X * MouseSensitivity);
+
+		// 添加Pitch旋转（上下看）
+		AddControllerPitchInput(LookAxisVector.Y * MouseSensitivity);
+	}
+}
+
+void APlayerCharacter::StartJump(float JumpVelocity)
+{
+
+	Jump();
+	// // 检查角色移动组件是否有效
+	// if (!GetCharacterMovement())
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("PlayerCharacter::StartJump - CharacterMovement component is null"));
+	// 	return;
+	// }
+	//
+	// // 检查角色是否可以跳跃（在地面上或者允许多段跳跃）
+	// if (!CanJump())
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("PlayerCharacter::StartJump - Character cannot jump"));
+	// 	return;
+	// }
+	//
+	// // 使用传入的跳跃速度，如果为0则使用默认值
+	// float FinalJumpVelocity = (JumpVelocity > 0.0f) ? JumpVelocity : CustomJumpVelocity;
+	//
+	// // 设置跳跃初速度
+	// GetCharacterMovement()->Velocity.Z = FinalJumpVelocity;
+	//
+	// // 设置角色状态为跳跃
+	// ChangeBPState(ECharacterAnimState::Jump);
+
+	// 输出调试日志
+	//UE_LOG(LogTemp, Log, TEXT("PlayerCharacter::StartJump - Applied jump velocity: %.2f"), FinalJumpVelocity);
+}
+
+void APlayerCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState)
+{
+	// 输出状态变化日志
+	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: State changed from %d to %d"), (int32)OldState, (int32)NewState);
+	
+	// 在此处添加状态变化时的C++逻辑处理
+	// 例如：播放音效、粒子效果、同步网络状态等
+	
+
+	// 根据新状态执行相关逻辑
+	switch (NewState)
+	{
+	case ECharacterAnimState::Idle:
+		// 如果进入待机状态，可以停止移动
+		GetCharacterMovement()->StopMovementImmediately();
+		break;
+        
+	case ECharacterAnimState::Walk:
+		// 设置行走速度
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		break;
+        
+	case ECharacterAnimState::Run:
+		// 设置奔跑速度
+		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+		break;
+        
+	case ECharacterAnimState::Jump:
+		// 跳跃逻辑 - 使用MovementMode强制保持浮空状态0.2秒
+		//StartFloatingWithMovementMode(0.2f);
+		StartJump();
+		break;
+        
+	case ECharacterAnimState::Attack:
+		// 在这里可以添加攻击相关的逻辑
+		break;
+        
+	case ECharacterAnimState::Dodge:
+		// 在这里可以添加闪避相关的逻辑
+		break;
+        
+	case ECharacterAnimState::Death:
+		// 处理角色死亡逻辑
+		// 例如禁用输入，播放死亡动画等
+		GetCharacterMovement()->DisableMovement();
+		break;
+        
+	case ECharacterAnimState::Hit:
+		// 处理受击逻辑
+		break;
+	}
+    
 }

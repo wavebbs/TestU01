@@ -76,20 +76,26 @@ void ABaseCharacter::Tick(float DeltaTime)
 			// 如果进入待机状态，可以停止移动
 			GetCharacterMovement()->StopMovementImmediately();
 			break;
-		
+		case ECharacterAnimState::Walk:
+			// 设置行走速度
+			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+			break;
+		case ECharacterAnimState::Run:
+			// 设置奔跑速度
+			GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+	
+			break;
 		default:
 			break;
 	}
 }
 
-void ABaseCharacter::Move(const FInputActionValue& Value)
+void ABaseCharacter::Move(const FVector2D MovementVector)
 {
-	// 获取输入值
-	const FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
+	UE_LOG(LogTemp, Warning, TEXT("MovementVector: %s"), *MovementVector.ToString());
+	// 确保有控制器并且有输入
+	if (Controller && (MovementVector.X != 0.f || MovementVector.Y != 0.f))
 	{
-		
 		// 获取前向和右向向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -105,19 +111,6 @@ void ABaseCharacter::Move(const FInputActionValue& Value)
 	
 }
 
-void ABaseCharacter::Look(const FInputActionValue& Value)
-{
-	const FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// 添加Yaw旋转（左右看）
-		AddControllerYawInput(LookAxisVector.X * MouseSensitivity);
-
-		// 添加Pitch旋转（上下看）
-		AddControllerPitchInput(LookAxisVector.Y * MouseSensitivity);
-	}
-}
 
 void ABaseCharacter::SetAnimationState(ECharacterAnimState NewState)
 {
@@ -140,6 +133,62 @@ void ABaseCharacter::ChangeBPState(ECharacterAnimState NewState)
 	{
 		return;
 	}
+
+	// 保存旧状态
+	ECharacterAnimState OldState = CurrentState;
+
+	// 更新当前状态
+	CurrentState = NewState;
+
+	// 调用状态变化回调
+
+	OnStateChange(OldState, NewState);
+}
+
+
+void ABaseCharacter::StartFloatingWithMovementMode(float Duration)
+{
+	if (m_bIsFloating) return;
+	
+	m_bIsFloating = true;
+	
+	// 保存当前移动模式
+	m_OriginalMovementMode = GetCharacterMovement()->MovementMode;
+	m_FloatingStartLocation = GetActorLocation();
+	
+	// 切换到飞行模式
+	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	
+	
+	// 设置定时器，在指定时间后结束浮空状态
+	GetWorld()->GetTimerManager().SetTimer(FloatingTimerHandle, this, &ABaseCharacter::EndFloatingWithMovementMode, Duration, false);
+	
+	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: Started MovementMode floating for %.2f seconds - Mode changed to Flying"), Duration);
+}
+
+void ABaseCharacter::EndFloatingWithMovementMode()
+{
+	// 恢复原始移动模式
+	GetCharacterMovement()->SetMovementMode(m_OriginalMovementMode);
+	
+	// 重置浮空状态
+	m_bIsFloating = false;
+	
+	// 清除定时器
+	GetWorld()->GetTimerManager().ClearTimer(FloatingTimerHandle);
+	
+	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: Ended MovementMode floating - Restored to original movement mode"));
+}
+
+void ABaseCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState)
+{
+	// 输出状态变化日志
+	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: State changed from %d to %d"), (int32)OldState, (int32)NewState);
+	
+	// 在此处添加状态变化时的C++逻辑处理
+	// 例如：播放音效、粒子效果、同步网络状态等
+	
+
 	// 根据新状态执行相关逻辑
 	switch (NewState)
 	{
@@ -156,12 +205,11 @@ void ABaseCharacter::ChangeBPState(ECharacterAnimState NewState)
 	case ECharacterAnimState::Run:
 		// 设置奔跑速度
 		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-		
-    	
 		break;
         
 	case ECharacterAnimState::Jump:
-		// 跳跃逻辑可能已经在Jump()函数中实现
+		// 跳跃逻辑 - 使用MovementMode强制保持浮空状态0.2秒
+		StartFloatingWithMovementMode(0.2f);
 		break;
         
 	case ECharacterAnimState::Attack:
@@ -183,8 +231,4 @@ void ABaseCharacter::ChangeBPState(ECharacterAnimState NewState)
 		break;
 	}
     
-	
-	CurrentState = NewState;
-
-
 }

@@ -35,7 +35,7 @@ bool UBTD_CheckAction::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerC
 
 	
 	
-	return Character->CheckAction(CAction);
+	return Character->CheckAction(CAction, CheckAnyKeyDown);
 	
 
 }

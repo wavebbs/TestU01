@@ -4,33 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
+#include "BTD_CheckGrounded.generated.h"
 
-#include "BTD_CheckAction.generated.h"
-
-class UInputAction;
 /**
- * 
+ * 检测角色是否落地的行为树装饰器
  */
 UCLASS()
-class UE_SAMPLE_THIRDGAME_API UBTD_CheckAction : public UBTDecorator
+class UE_SAMPLE_THIRDGAME_API UBTD_CheckGrounded : public UBTDecorator
 {
 	GENERATED_BODY()
 
 public:
-	UBTD_CheckAction();
-
-	// 输入动作
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* CAction;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	bool CheckAnyKeyDown = false;
+	UBTD_CheckGrounded();
 
 protected:
 	// 覆盖基类的条件判断方法
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 
 	virtual FString GetStaticDescription() const override;
-
-	// virtual FName GetNodeIconName() const override;
 };

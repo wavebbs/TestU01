@@ -49,29 +49,21 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* InteractAction;
-
 	
 	
-	// 输入处理函数
-	UFUNCTION()
-	void Move(const FInputActionValue& Value);
-
-	UFUNCTION()
-	void Look(const FInputActionValue& Value);
-
-
-
 
 public:
-	
+	// 输入处理函数
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void Move(const FVector2D MovementVector);
+
+
 	// 角色组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UHealthComponent* HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaminaComponent* StaminaComponent;
-
-
 	
 	// 移动参数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -131,4 +123,37 @@ public:
 	/** 获取动画蓝图实例 */
 	UFUNCTION(BlueprintPure, Category = "Animation")
 	UCharacterAnimInstanceBase* GetAnimInstance() const { return CharacterAnimBase; }
+
+	/** 浮空状态定时器句柄 */
+	FTimerHandle FloatingTimerHandle;
+
+
+	/** 基于MovementMode的浮空控制 */
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void StartFloatingWithMovementMode(float Duration = 0.2f);
+
+	/** 结束MovementMode浮空状态 */
+	UFUNCTION()
+	void EndFloatingWithMovementMode();
+
+	/** 状态变化时的回调方法 */
+	UFUNCTION()
+	virtual void OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState);
+
+private:
+	/** 浮空状态相关变量 */
+	UPROPERTY()
+	bool m_bIsFloating = false;
+	
+
+	/** 保存原始移动模式 */
+	UPROPERTY()
+	TEnumAsByte<EMovementMode> m_OriginalMovementMode;
+
+	UPROPERTY()
+	FVector m_FloatingStartLocation;
+
+	UPROPERTY()
+	float m_FloatingTargetHeight = 0.0f;
 };
+

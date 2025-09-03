@@ -6,6 +6,7 @@
 
 // 前向声明
 class UInputAction;
+class UEnhancedPlayerInput;
 struct FInputActionValue;
 
 UCLASS(NotBlueprintType)//(Blueprintable,BlueprintType)
@@ -18,6 +19,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	ABasePlayerController* PlayerController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UEnhancedPlayerInput* EnhancedPlayerInput;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -48,13 +52,17 @@ protected:
 	float BlockDamageReduction = 0.5f;
 	
 	UFUNCTION()
-	void OnMove(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
+	
+	UFUNCTION(BlueprintCallable,Category="Move")
+	void OnMoveUpdate();
 
 public:
 	virtual void Tick(float DeltaTime) override;
 	
 	UFUNCTION(BlueprintPure, Category = "Player State")
-	bool CheckAction(UInputAction* Action) const;
+	bool CheckAction(UInputAction* Action, bool anykey) const;
 
 
 	// 相机组件
@@ -72,5 +80,15 @@ public:
 	USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	virtual void ChangeBPState(ECharacterAnimState NewState) override;
+
+	/** 开始跳跃，给主角添加跳跃初速度 */
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void StartJump(float JumpVelocity = 0.0f);
+
+	/** 跳跃参数 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float CustomJumpVelocity = 600.0f;
+	
+	virtual void OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState) override;
 	
 };
