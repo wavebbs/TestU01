@@ -16,12 +16,11 @@ float UCombatFormulaSubsystem::CalcFinalDamage(
 {
 	if (!Attack || !BeHit || !VictimData) return 0.f;
 
-	// 基础伤害 * 攻击倍率 * 受击倍率 - 防御
-	float BaseDamage = Attack->Damage;
-	//float AttackMul  = Attack->TTT;
-	float BeHitMul   = BeHit->DefenceDamage;
+	// 基础伤害 * 攻击倍率 - 防御
+	const float BaseDamage = Attack->Damage * Attack->DamagerRate;
+	const float BeHitMul   = BeHit->DefenceDamage;
 
-	float Final = BaseDamage - BeHitMul;
+	const float Final = BaseDamage - BeHitMul;
 	return FMath::Max(0.f, Final);
 }
 
@@ -32,16 +31,7 @@ FVector UCombatFormulaSubsystem::CalcKnockbackVector(
 	if (!Attack) return FVector::ZeroVector;
 
 	FVector Dir = Attack->AttackDirection.GetSafeNormal();
-	float Strength = Attack->KnockbackStrength * BeHit->KnockbackDefence;
-	return Dir * Strength;
-}
-
-float UCombatFormulaSubsystem::CalcStunDuration(
-	const UAttackData* Attack,
-	const UBeHitData* BeHit)
-{
-	if (!Attack) return 0.f;
-
-	return Attack->BaseStunTime * BeHit->StunTimeDefence;
+	//float Strength = Attack->KnockbackStrength * BeHit->KnockbackDefence;
+	return Dir;
 }
 

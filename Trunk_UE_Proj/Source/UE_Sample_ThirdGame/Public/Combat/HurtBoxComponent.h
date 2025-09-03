@@ -7,6 +7,8 @@
 #include "HurtBoxComponent.generated.h"
 
 
+class UAttackableData;
+class UBeHitData1;
 class UBeHitData;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -27,9 +29,12 @@ public:
 
 protected:
 	// 受击框配置
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="HurtBox")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="HBox")
 	UBeHitData* BeHitData;
-	
+
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="HBox")
+	// UAttackableData* AttackableData;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

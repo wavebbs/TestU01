@@ -3,6 +3,9 @@
 #include "CoreMinimal.h"
 #include "CombatTypes.generated.h"
 
+class UBeHitData;
+class UAttackData;
+
 USTRUCT(BlueprintType)
 struct FAttackInfo {
 	GENERATED_BODY()
@@ -60,4 +63,71 @@ struct FPendingHitData
 
     UPROPERTY()
     FHitResult SweepResult;
+};
+
+UENUM(BlueprintType)
+enum class EHitBoxType : uint8
+{
+	Shield  UMETA(DisplayName="Shield"),
+	Weak    UMETA(DisplayName="Weak"),
+	Normal  UMETA(DisplayName="Normal")
+};
+
+USTRUCT(BlueprintType)
+struct FAttackCollisionInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TWeakObjectPtr<ACharacter> Attacker;
+
+	UPROPERTY()
+	TWeakObjectPtr<AActor> Victim;
+
+	UPROPERTY()
+	UAttackData* AttackData = nullptr;
+
+	UPROPERTY()
+	const UBeHitData* BeHitData = nullptr;
+
+	UPROPERTY()
+	FVector HitLocation = FVector::ZeroVector;
+
+	UPROPERTY()
+	EHitBoxType HitBoxType = EHitBoxType::Normal;
+
+	// 用于排序的距离（命中点到受击点中心）
+	float DistanceSq = 0.f;
+};
+
+UENUM(BlueprintType)
+enum class EAttackType : uint8
+{
+	Small,
+	Normal,
+	Big
+};
+
+UENUM(BlueprintType)
+enum class EHitSlowDownType: uint8
+{
+	Light,
+	Normal,
+	Heavy
+};
+
+UENUM(BlueprintType)
+enum class EInterruptLevel: uint8
+{
+	Light,
+	Normal,
+	Heavy
+};
+
+UENUM(BlueprintType)
+enum class EBeHitType: uint8
+{
+	BeHitSmall,
+	BeHitNormal,
+	BeHitBig
 };

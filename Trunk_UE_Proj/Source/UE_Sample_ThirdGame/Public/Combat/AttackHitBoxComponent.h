@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AttackData.h"
 #include "CombatTypes.h"
 #include "Components/BoxComponent.h"
 #include "AttackHitBoxComponent.generated.h"
@@ -31,7 +30,9 @@ protected:
 	
 	UPROPERTY(Transient)
 	UAttackData* CurAttackData;
-	
+
+	/** 攻击窗口激活状态 */
+	bool bAttackWindowActive = false; // 增加攻击窗口状态变量
 
 public:	
 	// Called every frame
@@ -53,8 +54,4 @@ private:
 	int32 OtherBodyIndex,
 	bool bFromSweep,
 	const FHitResult& SweepResult);
-	void ProcessPendingHits();
-
-	UPROPERTY()
-	TArray<FPendingHitData> PendingHits;
 };

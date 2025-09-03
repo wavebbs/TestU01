@@ -24,7 +24,7 @@ public:
 	FVector CalcKnockbackVector(const UAttackData* Attack, const UBeHitData* BeHit);
 
 	/** 计算硬直时间 */
-	UFUNCTION(BlueprintCallable, Category="Combat|Formula")
-	float CalcStunDuration(const UAttackData* Attack, const UBeHitData* BeHit);
+	// UFUNCTION(BlueprintCallable, Category="Combat|Formula")
+	// float CalcStunDuration(const UAttackData* Attack, const UBeHitData* BeHit);
 };
 

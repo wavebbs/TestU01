@@ -9,6 +9,9 @@ class UAttackData;
 class UBeHitData;
 class UCharacterDataComponent;
 
+/** 受击多播代理声明 */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnReceiveAttackDelegate, const UAttackData*, AttackData, const UBeHitData*, BeHitData, ACharacter*, Attacker);
+
 UCLASS(ClassGroup=(Combat), meta=(BlueprintSpawnableComponent))
 class UE_SAMPLE_THIRDGAME_API UCharacterBeHitLogicComponent : public UActorComponent
 {
@@ -27,8 +30,15 @@ protected:
 public:
 	/** 受击入口 */
 	UFUNCTION(BlueprintCallable, Category="BeHit")
-	FHitResultData OnHit(const UAttackData* AttackData, const UBeHitData* BeHitData, const FAttackInfo& AttackInfo);
+	//FHitResultData OnHit(const UAttackData* AttackData, const UBeHitData* BeHitData, const FAttackInfo& AttackInfo);
+	FHitResultData OnHit(const UAttackData* AttackData, const UBeHitData* BeHitData, ACharacter* InAttacker) const;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Combat")
+	void OnReceiveAttackEvent(const UAttackData* InAttackData, const UBeHitData* InBeHitData, ACharacter* InAttacker) const;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Combat")
+	FOnReceiveAttackDelegate OnReceiveAttack;
+	
 	/** 是否能被打断 */
 	// bool CanInterrupt(const UAttackData* AttackData) const;
 
