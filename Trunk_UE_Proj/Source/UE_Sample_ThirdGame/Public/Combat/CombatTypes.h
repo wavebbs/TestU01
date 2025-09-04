@@ -131,3 +131,28 @@ enum class EBeHitType: uint8
 	BeHitNormal,
 	BeHitBig
 };
+
+USTRUCT(BlueprintType)
+struct FCharacterFlag
+{
+	GENERATED_BODY()
+
+	/** Flag名称 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName FlagName;
+
+	/** 持续时间（秒），0为即时关闭 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Duration = 0.0f;
+
+	/** 内部计时 */
+	float RemainingTime = 0.0f;
+
+	FCharacterFlag()
+		: FlagName(NAME_None), Duration(0.0f), RemainingTime(0.0f)
+	{}
+
+	FCharacterFlag(FName InFlagName, float InDuration)
+		: FlagName(InFlagName), Duration(InDuration), RemainingTime(InDuration)
+	{}
+};
