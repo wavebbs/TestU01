@@ -43,7 +43,7 @@ bool UBTD_CheckAnimationCompleted::CalculateRawConditionValue(UBehaviorTreeCompo
 	if (bCheckCompleted)
 	{
 		// 检测动画是否播放完毕（进度 > 1.0）
-		bool bIsCompleted = !AnimInstance->IsPlayingMontageByName(AnimationName);
+		bool bIsCompleted = AnimInstance->IsMontageCompleted(AnimationName);
 		UE_LOG(LogTemp, Log, TEXT("BTD_CheckAnimationCompleted: 检测动画 [%s] 是否完成播放，结果: %s"), 
 			*AnimationName, bIsCompleted ? TEXT("是") : TEXT("否"));
 		return bIsCompleted;

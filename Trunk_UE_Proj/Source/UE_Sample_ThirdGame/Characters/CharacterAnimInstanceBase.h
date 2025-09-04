@@ -93,11 +93,22 @@ public:
 	/** 检查指定名称的蒙太奇是否正在播放 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
 	bool IsPlayingMontageByName(const FString& MontageName) const;
+
+	/** 检查指定名称的蒙太奇是否播放完毕 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
+	bool IsMontageCompleted(const FString& MontageName) const;
 	
 protected:
 	/** 存储可用的动画蒙太奇映射，名称 -> 蒙太奇资源 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	TMap<FString, UAnimMontage*> AnimMontageMap;
+
+	/** 跟踪正在播放的蒙太奇名称及其开始播放的帧号 */
+	UPROPERTY()
+	TMap<FString, int32> PlayingMontageFrames;
+
+	/** 自动更新和清理播放中的蒙太奇状态 */
+	void UpdatePlayingMontageStates();
 	
 private:
 	// 上一帧的Yaw值，用于计算YawDelta
