@@ -104,6 +104,6 @@ void UAttackHitBoxComponent::OnHitBoxOverlap(
 
     HitInfoSys->AddCollisionInfo(CollisionInfo);
 
-    UE_LOG(LogTemp, Log, TEXT("OnHitBoxOverlap: Attacker=%s, Victim=%s, HurtBox=%s, DefenceDamage=%d"),
-        *GetNameSafe(Attacker), *GetNameSafe(Victim), *GetNameSafe(HurtBox), static_cast<int32>(CollisionInfo.BeHitData->DefenceDamage));
+    // UE_LOG(LogTemp, Log, TEXT("OnHitBoxOverlap: Attacker=%s, Victim=%s, HurtBox=%s, DefenceDamage=%d"),
+    //     *GetNameSafe(Attacker), *GetNameSafe(Victim), *GetNameSafe(HurtBox), static_cast<int32>(CollisionInfo.BeHitData->DefenceDamage));
 }
