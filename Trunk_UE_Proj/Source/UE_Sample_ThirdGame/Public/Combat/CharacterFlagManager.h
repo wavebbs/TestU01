@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "CharacterFlagManager.generated.h"
 
+struct FGameplayTag;
 /**
  * @brief 角色Flag管理器
  */
@@ -20,15 +21,15 @@ public:
 
     /** 添加Flag */
     UFUNCTION(BlueprintCallable, Category="Flag")
-    void AddFlag(FName Flag, float Duration = 0.0f);
+    void AddFlag(FGameplayTag Flag, float Duration = 0.0f);
 
     /** 移除Flag（会触发Duration倒计时） */
     UFUNCTION(BlueprintCallable, Category="Flag")
-    void RemoveFlag(FName Flag);
+    void RemoveFlag(FGameplayTag Flag);
 
     /** 检查Flag是否生效 */
     UFUNCTION(BlueprintCallable, Category="Flag")
-    bool HasFlag(FName Flag) const;
+    bool HasFlag(FGameplayTag Flag) const;
 
 protected:
     virtual void BeginPlay() override;
@@ -37,5 +38,5 @@ protected:
 private:
     /** 当前激活的Flag列表 */
     UPROPERTY()
-    TMap<FName, FCharacterFlag> ActiveFlags;
+    TMap<FGameplayTag, FCharacterFlag> ActiveFlags;
 };

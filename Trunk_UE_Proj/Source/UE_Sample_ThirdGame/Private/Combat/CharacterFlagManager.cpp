@@ -3,6 +3,7 @@
 
 #include "Combat/CharacterFlagManager.h"
 
+#include "GameplayTagContainer.h"
 #include "Combat/CombatTypes.h"
 
 UCharacterFlagManager::UCharacterFlagManager()
@@ -15,7 +16,7 @@ void UCharacterFlagManager::BeginPlay()
     Super::BeginPlay();
 }
 
-void UCharacterFlagManager::AddFlag(FName Flag, float Duration)
+void UCharacterFlagManager::AddFlag(FGameplayTag Flag, float Duration)
 {
     if (ActiveFlags.Contains(Flag))
     {
@@ -29,7 +30,7 @@ void UCharacterFlagManager::AddFlag(FName Flag, float Duration)
     }
 }
 
-void UCharacterFlagManager::RemoveFlag(FName Flag)
+void UCharacterFlagManager::RemoveFlag(FGameplayTag Flag)
 {
     if (ActiveFlags.Contains(Flag))
     {
@@ -45,7 +46,7 @@ void UCharacterFlagManager::RemoveFlag(FName Flag)
     }
 }
 
-bool UCharacterFlagManager::HasFlag(FName Flag) const
+bool UCharacterFlagManager::HasFlag(FGameplayTag Flag) const
 {
     const FCharacterFlag* FoundFlag = ActiveFlags.Find(Flag);
     return FoundFlag != nullptr && (FoundFlag->RemainingTime > 0.0f || FoundFlag->Duration == 0.0f);
@@ -55,7 +56,7 @@ void UCharacterFlagManager::TickComponent(float DeltaTime, ELevelTick TickType, 
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    TArray<FName> FlagsToRemove;
+    TArray<FGameplayTag> FlagsToRemove;
     for (auto& Elem : ActiveFlags)
     {
         FCharacterFlag& Flag = Elem.Value;
@@ -68,7 +69,7 @@ void UCharacterFlagManager::TickComponent(float DeltaTime, ELevelTick TickType, 
             }
         }
     }
-    for (const FName& FlagName : FlagsToRemove)
+    for (const FGameplayTag& FlagName : FlagsToRemove)
     {
         ActiveFlags.Remove(FlagName);
     }

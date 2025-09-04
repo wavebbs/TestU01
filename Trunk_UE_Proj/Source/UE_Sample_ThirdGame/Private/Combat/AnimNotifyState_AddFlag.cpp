@@ -12,7 +12,7 @@ void UAnimNotifyState_AddFlag::NotifyBegin(USkeletalMeshComponent* MeshComp, UAn
 		if (UCharacterFlagManager* FlagMgr = Owner->FindComponentByClass<UCharacterFlagManager>())
 		{
 			// 开始时立即激活
-			FlagMgr->AddFlag(FlagName, 0.f);
+			FlagMgr->AddFlag(FlagTag, 0.f);
 		}
 	}
 }
@@ -26,11 +26,11 @@ void UAnimNotifyState_AddFlag::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnim
 			// 如果有额外 Duration，加上
 			if (Duration > 0.f)
 			{
-				FlagMgr->AddFlag(FlagName, Duration);
+				FlagMgr->AddFlag(FlagTag, Duration);
 			}
 			else
 			{
-				FlagMgr->RemoveFlag(FlagName);
+				FlagMgr->RemoveFlag(FlagTag);
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "AnimNotifyState_AddFlag.generated.h"
 
@@ -17,7 +18,7 @@ public:
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName FlagName;
+	FGameplayTag FlagTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Duration = 0.f;
