@@ -6,10 +6,11 @@
 #include "BehaviorTree/BTDecorator.h"
 #include "BTD_CheckAnimationCompleted.generated.h"
 
+class APlayerCharacter;
 class UCharacterAnimInstanceBase;
-
 /**
  * 检测指定动画是否播放完毕的行为树装饰器
+ * 使用PlayerCharacter中的动画检测方法
  */
 UCLASS()
 class UE_SAMPLE_THIRDGAME_API UBTD_CheckAnimationCompleted : public UBTDecorator

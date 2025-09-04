@@ -90,5 +90,22 @@ public:
 	float CustomJumpVelocity = 600.0f;
 	
 	virtual void OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState) override;
-	
+
+	/** 通过名称播放动画蒙太奇 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	UAnimMontage* PlayAnimMontageByName(const FString& MontageName, float PlayRate = 1.0f, FName StartSectionName = NAME_None);
+
+	// /** 通过蒙太奇对象播放动画 */
+	// UFUNCTION(BlueprintCallable, Category = "Animation")
+	// UAnimMontage* PlayAnimMontage(UAnimMontage* MontageToPlay, float PlayRate = 1.0f, FName StartSectionName = NAME_None);
+
+	/** 停止指定名称的蒙太奇 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void StopAnimMontageByName(const FString& MontageName, float BlendOutTime = 0.25f);
+
+	/** 检查指定名称的蒙太奇是否正在播放 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
+	bool IsPlayingMontageByName(const FString& MontageName) const;
+
+
 };

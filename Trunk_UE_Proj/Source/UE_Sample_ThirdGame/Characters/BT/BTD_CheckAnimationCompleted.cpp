@@ -5,7 +5,8 @@
 #include "AIController.h"
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "../CharacterAnimInstanceBase.h"
+#include "../PlayerCharacter.h"
+#include "Characters/CharacterAnimInstanceBase.h"
 
 UBTD_CheckAnimationCompleted::UBTD_CheckAnimationCompleted()
 {
@@ -42,7 +43,7 @@ bool UBTD_CheckAnimationCompleted::CalculateRawConditionValue(UBehaviorTreeCompo
 	if (bCheckCompleted)
 	{
 		// 检测动画是否播放完毕（进度 > 1.0）
-		bool bIsCompleted = AnimInstance->IsAnimationCompleted(AnimationName);
+		bool bIsCompleted = !AnimInstance->IsPlayingMontageByName(AnimationName);
 		UE_LOG(LogTemp, Log, TEXT("BTD_CheckAnimationCompleted: 检测动画 [%s] 是否完成播放，结果: %s"), 
 			*AnimationName, bIsCompleted ? TEXT("是") : TEXT("否"));
 		return bIsCompleted;
@@ -50,19 +51,12 @@ bool UBTD_CheckAnimationCompleted::CalculateRawConditionValue(UBehaviorTreeCompo
 	else if (bCheckPlaying)
 	{
 		// 检测动画是否正在播放
-		bool bIsPlaying = AnimInstance->IsAnimationPlaying(AnimationName);
+		bool bIsPlaying = AnimInstance->IsPlayingMontageByName(AnimationName);
 		UE_LOG(LogTemp, Log, TEXT("BTD_CheckAnimationCompleted: 检测动画 [%s] 是否正在播放，结果: %s"), 
 			*AnimationName, bIsPlaying ? TEXT("是") : TEXT("否"));
 		return bIsPlaying;
 	}
-	else
-	{
-		// 获取动画播放进度
-		float Progress = AnimInstance->GetAnimationProgress(AnimationName);
-		UE_LOG(LogTemp, Log, TEXT("BTD_CheckAnimationCompleted: 动画 [%s] 播放进度: %f"), 
-			*AnimationName, Progress);
-		return Progress >= 0.0f; // 进度大于等于0表示动画存在
-	}
+	return false;
 }
 
 FString UBTD_CheckAnimationCompleted::GetStaticDescription() const

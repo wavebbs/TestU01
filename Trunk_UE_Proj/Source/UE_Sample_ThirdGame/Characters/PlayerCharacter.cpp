@@ -10,6 +10,12 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "BaseplayerController.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimSequence.h"
+#include "Animation/AnimBlueprintGeneratedClass.h"
+#include "Animation/AnimNode_StateMachine.h"
+#include "CharacterAnimInstanceBase.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -283,7 +289,8 @@ void APlayerCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAni
 		break;
         
 	case ECharacterAnimState::Attack:
-		// 在这里可以添加攻击相关的逻辑
+		// 播放攻击动画蒙太奇
+		PlayAnimMontageByName("AttackMontage");
 		break;
         
 	case ECharacterAnimState::Dodge:
@@ -301,4 +308,49 @@ void APlayerCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAni
 		break;
 	}
     
+}
+
+UAnimMontage* APlayerCharacter::PlayAnimMontageByName(const FString& MontageName, float PlayRate, FName StartSectionName)
+{
+	// 获取角色的动画实例
+	UCharacterAnimInstanceBase* AnimInstance = Cast<UCharacterAnimInstanceBase>(GetMesh()->GetAnimInstance());
+	if (!AnimInstance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerCharacter: 无法获取CharacterAnimInstanceBase实例"));
+		return nullptr;
+	}
+
+	return AnimInstance->PlayAnimMontageByName(MontageName, PlayRate, StartSectionName);
+	
+}
+
+void APlayerCharacter::StopAnimMontageByName(const FString& MontageName, float BlendOutTime)
+{
+	// 获取角色的动画实例
+	UCharacterAnimInstanceBase* AnimInstance = Cast<UCharacterAnimInstanceBase>(GetMesh()->GetAnimInstance());
+	if (!AnimInstance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerCharacter: 无法获取CharacterAnimInstanceBase实例"));
+		return;
+	}
+
+	AnimInstance->StopAnimMontageByName(MontageName, BlendOutTime);
+}
+
+bool APlayerCharacter::IsPlayingMontageByName(const FString& MontageName) const
+{
+	// 获取角色的动画实例
+	UCharacterAnimInstanceBase* AnimInstance = Cast<UCharacterAnimInstanceBase>(GetMesh()->GetAnimInstance());
+	if (!AnimInstance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerCharacter: 无法获取CharacterAnimInstanceBase实例"));
+		return false;
+	}
+
+	if (AnimInstance->IsPlayingMontageByName(MontageName))
+	{
+		return true;
+	}
+	
+	return false;
 }

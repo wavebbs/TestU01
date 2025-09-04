@@ -77,23 +77,28 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "Animation")
 	bool CheckState(ECharacterAnimState NewState) const;
+	
+	/** 通过名称播放动画蒙太奇 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	UAnimMontage* PlayAnimMontageByName(const FString& MontageName, float PlayRate = 1.0f, FName StartSectionName = NAME_None);
 
-	// 查询指定名称的动画播放进度
+	// /** 通过蒙太奇对象播放动画 */
+	// UFUNCTION(BlueprintCallable, Category = "Animation")
+	// UAnimMontage* PlayAnimMontage(UAnimMontage* MontageToPlay, float PlayRate = 1.0f, FName StartSectionName = NAME_None);
+
+	/** 停止指定名称的蒙太奇 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void StopAnimMontageByName(const FString& MontageName, float BlendOutTime = 0.25f);
+
+	/** 检查指定名称的蒙太奇是否正在播放 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
-	float GetAnimationProgress(const FString& AnimationName) const;
-
-	// 检查指定动画是否正在播放
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
-	bool IsAnimationPlaying(const FString& AnimationName) const;
-
-	// 检查指定动画是否已完成播放（进度 > 1.0）
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
-	bool IsAnimationCompleted(const FString& AnimationName) const;
-
-	// 根据动画蒙太奇获取播放进度
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
-	float GetMontageProgress(UAnimMontage* Montage) const;
-
+	bool IsPlayingMontageByName(const FString& MontageName) const;
+	
+protected:
+	/** 存储可用的动画蒙太奇映射，名称 -> 蒙太奇资源 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+	TMap<FString, UAnimMontage*> AnimMontageMap;
+	
 private:
 	// 上一帧的Yaw值，用于计算YawDelta
 	float PreviousYaw;
