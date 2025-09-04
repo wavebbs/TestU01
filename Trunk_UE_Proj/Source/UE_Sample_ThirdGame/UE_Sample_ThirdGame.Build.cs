@@ -17,6 +17,7 @@ public class UE_Sample_ThirdGame : ModuleRules
 			"AIModule",
 			"StateTreeModule",
 			"GameplayStateTreeModule",
+			"GameplayTags",
 			"UMG"
 		});
 

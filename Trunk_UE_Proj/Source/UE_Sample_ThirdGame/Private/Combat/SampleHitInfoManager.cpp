@@ -3,6 +3,7 @@
 
 #include "Combat/SampleHitInfoManager.h"
 
+#include "Combat/BeHitData.h"
 #include "Combat/CharacterBeHitLogicComponent.h"
 #include "Combat/CombatTypes.h"
 #include "GameFramework/Character.h"
@@ -50,10 +51,23 @@ void USampleHitInfoManager::UpdateCollisions()
 
 		Infos.Sort([](const FAttackCollisionInfo& A, const FAttackCollisionInfo& B)
 		{
-			// 优先级规则
-			if (A.HitBoxType != B.HitBoxType)
+			if (!A.BeHitData && !B.BeHitData)
 			{
-				return A.HitBoxType < B.HitBoxType; // Shield > Weak > Normal
+				return A.DistanceSq < B.DistanceSq;
+			}
+			if (!A.BeHitData)
+			{
+				return false;
+			}
+			if (!B.BeHitData)
+			{
+				return true;
+			}
+			
+			// 优先级规则
+			if (A.BeHitData->HurtBoxType != B.BeHitData->HurtBoxType)
+			{
+				return A.BeHitData->HurtBoxType < B.BeHitData->HurtBoxType; // Shield > Weak > Normal
 			}
 			return A.DistanceSq < B.DistanceSq; // 同优先级比距离
 		});

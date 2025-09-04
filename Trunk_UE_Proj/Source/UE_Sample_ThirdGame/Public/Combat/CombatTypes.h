@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "CombatTypes.generated.h"
 
 class UBeHitData;
@@ -93,9 +94,6 @@ struct FAttackCollisionInfo
 	UPROPERTY()
 	FVector HitLocation = FVector::ZeroVector;
 
-	UPROPERTY()
-	EHitBoxType HitBoxType = EHitBoxType::Normal;
-
 	// 用于排序的距离（命中点到受击点中心）
 	float DistanceSq = 0.f;
 };
@@ -130,4 +128,29 @@ enum class EBeHitType: uint8
 	BeHitSmall,
 	BeHitNormal,
 	BeHitBig
+};
+
+USTRUCT(BlueprintType)
+struct FCharacterFlag
+{
+	GENERATED_BODY()
+
+	/** Flag名称 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag FlagName;
+
+	/** 持续时间（秒），0为即时关闭 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Duration = 0.0f;
+
+	/** 内部计时 */
+	float RemainingTime = 0.0f;
+
+	FCharacterFlag()
+		: FlagName(FGameplayTag::EmptyTag), Duration(0.0f), RemainingTime(0.0f)
+	{}
+
+	FCharacterFlag(FGameplayTag InFlagName, float InDuration)
+		: FlagName(InFlagName), Duration(InDuration), RemainingTime(InDuration)
+	{}
 };

@@ -101,10 +101,9 @@ void UAttackHitBoxComponent::OnHitBoxOverlap(
     CollisionInfo.AttackData = CurAttackData;
     CollisionInfo.BeHitData = BeHitData;
 	CollisionInfo.DistanceSq = HurtBox ? FVector::DistSquared(GetOwner()->GetActorLocation(), HurtBox->GetComponentLocation()) : 0.0f;
-    CollisionInfo.HitBoxType = EHitBoxType::Normal;
 
     HitInfoSys->AddCollisionInfo(CollisionInfo);
 
-    UE_LOG(LogTemp, Log, TEXT("OnHitBoxOverlap: Attacker=%s, Victim=%s, HurtBox=%s, HitBoxType=%d"),
-        *GetNameSafe(Attacker), *GetNameSafe(Victim), *GetNameSafe(HurtBox), static_cast<int32>(CollisionInfo.HitBoxType));
+    UE_LOG(LogTemp, Log, TEXT("OnHitBoxOverlap: Attacker=%s, Victim=%s, HurtBox=%s, DefenceDamage=%d"),
+        *GetNameSafe(Attacker), *GetNameSafe(Victim), *GetNameSafe(HurtBox), static_cast<int32>(CollisionInfo.BeHitData->DefenceDamage));
 }
