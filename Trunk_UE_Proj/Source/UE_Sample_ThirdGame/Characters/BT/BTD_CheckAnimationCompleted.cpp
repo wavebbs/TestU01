@@ -88,15 +88,15 @@ FString UBTD_CheckAnimationCompleted::GetStaticDescription() const
 
 UCharacterAnimInstanceBase* UBTD_CheckAnimationCompleted::GetCharacterAnimInstance(UBehaviorTreeComponent& OwnerComp) const
 {
-	// 获取AI控制器
-	AAIController* AIController = OwnerComp.GetAIOwner();
-	if (!AIController)
+	AController* actor = Cast<AController>(	OwnerComp.GetOwner());
+	if (!actor)
 	{
 		return nullptr;
 	}
 
+
 	// 获取被控制的角色
-	ACharacter* Character = Cast<ACharacter>(AIController->GetPawn());
+	ACharacter* Character = Cast<ACharacter>(actor->GetPawn());
 	if (!Character)
 	{
 		return nullptr;
