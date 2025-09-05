@@ -3,6 +3,7 @@
 
 #include "Combat/HurtBoxComponent.h"
 
+#include "Combat/BeHitData.h"
 #include "Combat/HurtBoxHandlerComponent.h"
 
 // Sets default values for this component's properties
@@ -12,7 +13,7 @@ UHurtBoxComponent::UHurtBoxComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	BeHitData = CreateDefaultSubobject<UBeHitData>(TEXT("DefaultBeHitData"));
 }
 
 

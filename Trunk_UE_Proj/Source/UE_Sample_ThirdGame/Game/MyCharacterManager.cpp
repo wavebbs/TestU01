@@ -2,8 +2,6 @@
 
 #include "MyCharacterManager.h"
 
-#include "Engine/World.h"
-#include "Engine/GameInstance.h"
 #include "GameFramework/Actor.h"
 
 void UMyCharacterManager::RegisterCharacter(AActor* Character)
@@ -41,12 +39,12 @@ TArray<AActor*> UMyCharacterManager::GetGameCharacters() const
     TArray<AActor*> Result;
     for (const TWeakObjectPtr<AActor>& WeakPtr : GameCharacters)
     {
-        UE_LOG(LogTemp, Display, TEXT("CharacterManager::GameCharacters Num: %d"), GameCharacters.Num());
+        // UE_LOG(LogTemp, Display, TEXT("CharacterManager::GameCharacters Num: %d"), GameCharacters.Num());
         
         if (AActor* Actor = WeakPtr.Get())
         {
             Result.Add(Actor);
-            UE_LOG(LogTemp, Display, TEXT("CharacterManager::GameCharacter: %s"), *Actor->GetName());
+            // UE_LOG(LogTemp, Display, TEXT("CharacterManager::GameCharacter: %s"), *Actor->GetName());
         }
     }
     return Result;
