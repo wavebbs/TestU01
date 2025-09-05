@@ -8,7 +8,6 @@
 
 
 class UAttackableData;
-class UBeHitData1;
 class UBeHitData;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

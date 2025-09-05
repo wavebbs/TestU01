@@ -6,6 +6,7 @@ UCharacterDataComponent::UCharacterDataComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	CurrentHP = 0.f;
+	CharacterData = CreateDefaultSubobject<UCharacterData>(TEXT("DefaultCharacterData"));
 }
 
 void UCharacterDataComponent::BeginPlay()

@@ -1,4 +1,5 @@
 #pragma once
+#include "CombatTypes.h"
 
 #include "BeHitData.generated.h"
 

@@ -89,11 +89,12 @@ void UAttackHitBoxComponent::OnHitBoxOverlap(
 
     // 获取受击数据
     const UHurtBoxComponent* HurtBox = Cast<UHurtBoxComponent>(OtherComp);
-    const UBeHitData* BeHitData = nullptr;
-    if (HurtBox)
-    {
-        BeHitData = HurtBox->GetBeHitData();
-    }
+	if (!HurtBox)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnHitBoxOverlap: OtherComp 不是受击盒，忽略。"));
+		return;
+	}
+	const UBeHitData* BeHitData = HurtBox->GetBeHitData();
 
     FAttackCollisionInfo CollisionInfo;
     CollisionInfo.Attacker = Attacker;
