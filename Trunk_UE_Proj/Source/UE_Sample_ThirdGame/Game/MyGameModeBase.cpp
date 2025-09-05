@@ -3,7 +3,7 @@
 
 #include "Game/MyGameModeBase.h"
 #include "Characters/BaseCharacter.h"
-#include "Characters/PlayerCharacter.h"
+#include "Characters/Player/PlayerCharacter.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/PlayerStart.h"
 #include "Engine/World.h"

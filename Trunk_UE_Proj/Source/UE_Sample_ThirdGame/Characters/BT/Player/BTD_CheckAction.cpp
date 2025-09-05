@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Characters/BT/BTD_CheckAction.h"
+#include "Characters/BT/Player/BTD_CheckAction.h"
 #include "AIController.h"
 #include "Characters/BaseCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Characters/PlayerCharacter.h"
+#include "Characters/Player/PlayerCharacter.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Characters/BasePlayerController.h"
+#include "Characters/Player/BasePlayerController.h"
 #include "GameFramework/Controller.h"
 
 UBTD_CheckAction::UBTD_CheckAction()

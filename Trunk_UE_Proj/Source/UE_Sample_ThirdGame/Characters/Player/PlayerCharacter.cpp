@@ -15,7 +15,7 @@
 #include "Animation/AnimSequence.h"
 #include "Animation/AnimBlueprintGeneratedClass.h"
 #include "Animation/AnimNode_StateMachine.h"
-#include "CharacterAnimInstanceBase.h"
+#include "Characters/CharacterAnimInstanceBase.h"
 
 
 APlayerCharacter::APlayerCharacter()

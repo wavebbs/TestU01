@@ -5,7 +5,7 @@
 #include "AIController.h"
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "../PlayerCharacter.h"
+#include "Characters/Player/PlayerCharacter.h"
 #include "Characters/CharacterAnimInstanceBase.h"
 
 UBTD_CheckAnimationCompleted::UBTD_CheckAnimationCompleted()

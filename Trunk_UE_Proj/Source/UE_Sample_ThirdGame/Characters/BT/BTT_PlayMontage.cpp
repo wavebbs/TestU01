@@ -2,7 +2,7 @@
 
 #include "Characters/BT/BTT_PlayMontage.h"
 #include "Characters/BaseCharacter.h"
-#include "Characters/PlayerCharacter.h"
+#include "Characters/Player/PlayerCharacter.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "BehaviorTree/BlackboardComponent.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCharacter.h"
+#include "../BaseCharacter.h"
 #include "PlayerCharacter.generated.h"
 
 // 前向声明

@@ -14,6 +14,7 @@ class ABaseAIController;
 class ABasePlayerController;
 class UAnimInstance;
 class UCharacterAnimInstanceBase;
+class UCharacterFlagManager;
 struct FInputActionValue;
 
 UCLASS()
@@ -64,6 +65,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaminaComponent* StaminaComponent;
+	
+	/** Flag 管理器组件 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCharacterFlagManager* CharacterFlagManager;
 	
 	// 移动参数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -156,4 +161,5 @@ private:
 	UPROPERTY()
 	float m_FloatingTargetHeight = 0.0f;
 };
+
 

@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "Components/HealthComponent.h"
 #include "Components/StaminaComponent.h"
+#include "Combat/CharacterFlagManager.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -31,6 +32,9 @@ ABaseCharacter::ABaseCharacter()
 
 	// 创建耐力组件
 	StaminaComponent = CreateDefaultSubobject<UStaminaComponent>(TEXT("StaminaComponent"));
+
+	// 创建角色状态标志管理器组件
+	CharacterFlagManager = CreateDefaultSubobject<UCharacterFlagManager>(TEXT("CharacterFlagManager"));
 }
 
 void ABaseCharacter::BeginPlay()
@@ -92,7 +96,6 @@ void ABaseCharacter::Tick(float DeltaTime)
 
 void ABaseCharacter::Move(const FVector2D MovementVector)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MovementVector: %s"), *MovementVector.ToString());
 	// 确保有控制器并且有输入
 	if (Controller && (MovementVector.X != 0.f || MovementVector.Y != 0.f))
 	{
