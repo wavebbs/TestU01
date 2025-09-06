@@ -23,15 +23,7 @@ public:
     /** 测试子弹时间效果 */
     UFUNCTION(BlueprintCallable, Category = "TimeScale Test")
     void TestBulletTime();
-
-    /** 测试击中定帧效果 */
-    UFUNCTION(BlueprintCallable, Category = "TimeScale Test")
-    void TestHitFreeze();
-
-    /** 测试游戏暂停效果 */
-    UFUNCTION(BlueprintCallable, Category = "TimeScale Test")
-    void TestGamePause();
-
+    
     /** 测试慢动作效果 */
     UFUNCTION(BlueprintCallable, Category = "TimeScale Test")
     void TestSlowMotion();

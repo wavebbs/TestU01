@@ -20,6 +20,9 @@ void UCharacterAnimInstanceBase::NativeInitializeAnimation()
 	Yaw = 0.0f;
 	YawDelta = 0.0f;
 	PreviousYaw = 0.0f;
+	
+	// 初始化动画播放速率为默认值
+	m_AnimPlayRate = 1.0f;
 
 	// 调用蓝图初始化事件
 	BlueprintInitializeAnimation();
@@ -101,15 +104,17 @@ UAnimMontage* UCharacterAnimInstanceBase::PlayAnimMontageByName(const FString& M
 	if (FoundMontage && *FoundMontage)
 	{
 		{
-			float const Duration = Montage_Play(*FoundMontage, PlayRate);
+			// 应用全局动画播放速率
+			float FinalPlayRate = PlayRate;// * m_AnimPlayRate;
+			float const Duration = Montage_Play(*FoundMontage, FinalPlayRate);
 
 			if (Duration > 0.f)
 			{
 				// 记录蒙太奇名称和开始播放的帧号
 				PlayingMontageFrames.Add(MontageName, 0);
 				
-				UE_LOG(LogTemp, Log, TEXT("CharacterAnimInstanceBase: 开始播放蒙太奇 '%s'，播放时长: %.2f秒，帧号: %llu"), 
-					*MontageName, Duration, GFrameCounter);
+				UE_LOG(LogTemp, Log, TEXT("CharacterAnimInstanceBase: 开始播放蒙太奇 '%s'，播放时长: %.2f秒，播放速率: %.2f，帧号: %llu"), 
+					*MontageName, Duration, FinalPlayRate, GFrameCounter);
 				
 				// Start at a given Section.
 				if( StartSectionName != NAME_None )
@@ -148,6 +153,42 @@ void UCharacterAnimInstanceBase::StopAnimMontageByName(const FString& MontageNam
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CharacterAnimInstanceBase: 无法找到要停止的蒙太奇 '%s'"), *MontageName);
 	}
+}
+
+void UCharacterAnimInstanceBase::StopAllMontages(float BlendOutTime)
+{
+	// 如果没有正在播放的蒙太奇，直接返回
+	if (PlayingMontageFrames.Num() == 0)
+	{
+		UE_LOG(LogTemp, Verbose, TEXT("CharacterAnimInstanceBase: 没有正在播放的蒙太奇需要停止"));
+		return;
+	}
+
+	// 获取所有正在播放的蒙太奇名称
+	TArray<FString> MontageNames;
+	PlayingMontageFrames.GetKeys(MontageNames);
+	
+	UE_LOG(LogTemp, Log, TEXT("CharacterAnimInstanceBase: 开始停止所有蒙太奇，共计 %d 个"), MontageNames.Num());
+
+	// 遍历所有蒙太奇并停止播放
+	for (const FString& MontageName : MontageNames)
+	{
+		UAnimMontage** FoundMontage = AnimMontageMap.Find(MontageName);
+		if (FoundMontage && *FoundMontage)
+		{
+			Montage_Stop(BlendOutTime, *FoundMontage);
+			UE_LOG(LogTemp, Log, TEXT("CharacterAnimInstanceBase: 已停止蒙太奇 '%s'"), *MontageName);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("CharacterAnimInstanceBase: 无法找到要停止的蒙太奇 '%s'"), *MontageName);
+		}
+	}
+	
+	// 清空所有正在播放的蒙太奇记录
+	PlayingMontageFrames.Empty();
+	
+	UE_LOG(LogTemp, Log, TEXT("CharacterAnimInstanceBase: 已停止所有蒙太奇动画"));
 }
 
 bool UCharacterAnimInstanceBase::IsPlayingMontageByName(const FString& MontageName) const
@@ -312,4 +353,35 @@ void UCharacterAnimInstanceBase::UpdatePlayingMontageStates()
 		UE_LOG(LogTemp, Verbose, TEXT("CharacterAnimInstanceBase: 自动清理完成，移除了 %d 个蒙太奇，剩余播放中: %d 个"), 
 			CompletedMontages.Num(), PlayingMontageFrames.Num());
 	}
+}
+
+void UCharacterAnimInstanceBase::SetAnimationPlayRate(float NewRate)
+{
+	// 确保速率在合理范围内
+	NewRate = FMath::Max(0.01f, NewRate);
+	
+	// 如果速率没有变化，直接返回
+	if (FMath::IsNearlyEqual(m_AnimPlayRate, NewRate))
+	{
+		return;
+	}
+	
+	float OldRate = m_AnimPlayRate;
+	m_AnimPlayRate = NewRate;
+	
+	// 1. 设置全局动画播放速率，影响所有动画序列
+// 1. 设置全局动画播放速率，影响所有动画序列
+	if (USkeletalMeshComponent* SkeletalMesh = GetSkelMeshComponent())
+	{
+		SkeletalMesh->GlobalAnimRateScale = NewRate;
+	}
+	
+	
+	UE_LOG(LogTemp, Log, TEXT("CharacterAnimInstanceBase: 设置动画整体播放速率为 %.2f (含动画序列和蒙太奇)"), NewRate);
+}
+
+void UCharacterAnimInstanceBase::ResetAnimationPlayRate()
+{
+	// 重置为默认播放速率
+	SetAnimationPlayRate(1.0f);
 }

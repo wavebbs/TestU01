@@ -16,10 +16,9 @@ UENUM(BlueprintType)
 enum class ETimeScaleEffectType : uint8
 {
     None            UMETA(DisplayName = "无效果"),
-    BulletTime      UMETA(DisplayName = "子弹时间"),
-    HitFreeze       UMETA(DisplayName = "击中定帧"),
-    GamePause       UMETA(DisplayName = "游戏暂停"),
-    SlowMotion      UMETA(DisplayName = "慢动作")
+    AnimTimeScaleExceptPlayer      UMETA(DisplayName = "子弹时间，除主角外，其他角色时间缩放"),
+    AnimTimeScale      UMETA(DisplayName = "所有角色变慢"),
+    GlobalTimeScale      UMETA(DisplayName = "全局时间缩放")
 };
 
 /**
@@ -181,15 +180,7 @@ public:
     /** 应用子弹时间效果 */
     UFUNCTION(BlueprintCallable, Category = "TimeScale|QuickEffects")
     int32 ApplyBulletTimeEffect(float TimeScale = 0.3f, float Duration = 2.0f, int32 Priority = 100);
-
-    /** 应用击中定帧效果 */
-    UFUNCTION(BlueprintCallable, Category = "TimeScale|QuickEffects")
-    int32 ApplyHitFreezeEffect(float FreezeTime = 0.1f, int32 Priority = 200);
-
-    /** 应用游戏暂停效果 */
-    UFUNCTION(BlueprintCallable, Category = "TimeScale|QuickEffects")
-    int32 ApplyGamePauseEffect(int32 Priority = 1000);
-
+    
     /** 应用慢动作效果 */
     UFUNCTION(BlueprintCallable, Category = "TimeScale|QuickEffects")
     int32 ApplySlowMotionEffect(float TimeScale = 0.5f, float Duration = 3.0f, int32 Priority = 50);

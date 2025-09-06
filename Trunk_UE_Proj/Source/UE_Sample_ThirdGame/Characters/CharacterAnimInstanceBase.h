@@ -97,6 +97,33 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
 	bool IsMontageCompleted(const FString& MontageName) const;
 	
+	/**
+	 * @brief 停止所有正在播放的蒙太奇动画
+	 * @param BlendOutTime 淡出时间
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void StopAllMontages(float BlendOutTime = 0.25f);
+	
+	/**
+	 * @brief 设置角色动画的整体播放速率
+	 * @param NewRate 新的播放速率 (1.0 = 正常速度, 0.5 = 半速, 2.0 = 两倍速)
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void SetAnimationPlayRate(float NewRate);
+	
+	/**
+	 * @brief 获取当前动画播放速率
+	 * @return 当前播放速率
+	 */
+	UFUNCTION(BlueprintPure, Category = "Animation")
+	float GetAnimationPlayRate() const { return m_AnimPlayRate; }
+	
+	/**
+	 * @brief 重置动画播放速率为默认值(1.0)
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void ResetAnimationPlayRate();
+	
 protected:
 	/** 存储可用的动画蒙太奇映射，名称 -> 蒙太奇资源 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
@@ -108,6 +135,10 @@ protected:
 
 	/** 自动更新和清理播放中的蒙太奇状态 */
 	void UpdatePlayingMontageStates();
+	
+	/** 动画全局播放速率 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (ClampMin = "0.01", ClampMax = "5.0"))
+	float m_AnimPlayRate = 1.0f;
 	
 private:
 	// 上一帧的Yaw值，用于计算YawDelta

@@ -194,6 +194,7 @@ void ABaseCharacter::EndFloatingWithMovementMode()
 
 void ABaseCharacter::OnLeaveState(ECharacterAnimState OldState)
 {
+	GetAnimInstance()->StopAllMontages(0.2f);
     // 可在子类或蓝图扩展，默认输出日志
     UE_LOG(LogTemp, Log, TEXT("BaseCharacter: 离开状态 %d"), (int32)OldState);
 }
@@ -205,46 +206,4 @@ void ABaseCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAnimS
     // 输出状态变化日志
     UE_LOG(LogTemp, Log, TEXT("BaseCharacter: State changed from %d to %d"), (int32)OldState, (int32)NewState);
 	
-	// 根据新状态执行相关逻辑
-	switch (NewState)
-	{
-	case ECharacterAnimState::Idle:
-		// 如果进入待机状态，可以停止移动
-		GetCharacterMovement()->StopMovementImmediately();
-		break;
-        
-	case ECharacterAnimState::Walk:
-		// 设置行走速度
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-		break;
-        
-	case ECharacterAnimState::Run:
-		// 设置奔跑速度
-		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-		break;
-        
-	case ECharacterAnimState::Jump:
-		// 跳跃逻辑 - 使用MovementMode强制保持浮空状态0.2秒
-		StartFloatingWithMovementMode(0.2f);
-		break;
-        
-	case ECharacterAnimState::Attack:
-		// 在这里可以添加攻击相关的逻辑
-		break;
-        
-	case ECharacterAnimState::Dodge:
-		// 在这里可以添加闪避相关的逻辑
-		break;
-        
-	case ECharacterAnimState::Death:
-		// 处理角色死亡逻辑
-		// 例如禁用输入，播放死亡动画等
-		GetCharacterMovement()->DisableMovement();
-		break;
-        
-	case ECharacterAnimState::Hit:
-		// 处理受击逻辑
-		break;
-	}
-    
 }

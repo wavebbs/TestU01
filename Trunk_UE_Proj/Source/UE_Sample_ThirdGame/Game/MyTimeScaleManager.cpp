@@ -181,7 +181,7 @@ void UMyTimeScaleManager::Tick(float DeltaTime)
 int32 UMyTimeScaleManager::ApplyBulletTimeEffect(float TimeScale, float Duration, int32 Priority)
 {
     FTimeScaleEffectData EffectData;
-    EffectData.EffectType = ETimeScaleEffectType::BulletTime;
+    EffectData.EffectType = ETimeScaleEffectType::AnimTimeScaleExceptPlayer;
     EffectData.TargetTimeScale = TimeScale;
     EffectData.Duration = Duration;
     EffectData.FadeInTime = 0.2f;
@@ -194,42 +194,12 @@ int32 UMyTimeScaleManager::ApplyBulletTimeEffect(float TimeScale, float Duration
     return ApplyTimeScaleEffect(EffectData);
 }
 
-int32 UMyTimeScaleManager::ApplyHitFreezeEffect(float FreezeTime, int32 Priority)
-{
-    FTimeScaleEffectData EffectData;
-    EffectData.EffectType = ETimeScaleEffectType::HitFreeze;
-    EffectData.TargetTimeScale = 0.0f;
-    EffectData.Duration = FreezeTime;
-    EffectData.FadeInTime = 0.02f;
-    EffectData.FadeOutTime = 0.05f;
-    EffectData.Priority = Priority;
-    EffectData.bAffectCharacterAnimation = true;
-    EffectData.bAffectParticles = false; // 击中特效通常不受影响
-    EffectData.bAffectAudio = false;
-    
-    return ApplyTimeScaleEffect(EffectData);
-}
 
-int32 UMyTimeScaleManager::ApplyGamePauseEffect(int32 Priority)
-{
-    FTimeScaleEffectData EffectData;
-    EffectData.EffectType = ETimeScaleEffectType::GamePause;
-    EffectData.TargetTimeScale = 0.0f;
-    EffectData.Duration = -1.0f; // 无限持续
-    EffectData.FadeInTime = 0.0f;
-    EffectData.FadeOutTime = 0.1f;
-    EffectData.Priority = Priority;
-    EffectData.bAffectCharacterAnimation = true;
-    EffectData.bAffectParticles = true;
-    EffectData.bAffectAudio = true;
-    
-    return ApplyTimeScaleEffect(EffectData);
-}
 
 int32 UMyTimeScaleManager::ApplySlowMotionEffect(float TimeScale, float Duration, int32 Priority)
 {
     FTimeScaleEffectData EffectData;
-    EffectData.EffectType = ETimeScaleEffectType::SlowMotion;
+    EffectData.EffectType = ETimeScaleEffectType::GlobalTimeScale;
     EffectData.TargetTimeScale = TimeScale;
     EffectData.Duration = Duration;
     EffectData.FadeInTime = 0.5f;

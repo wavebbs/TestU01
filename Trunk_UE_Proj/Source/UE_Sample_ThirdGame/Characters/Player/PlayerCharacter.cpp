@@ -281,12 +281,17 @@ void APlayerCharacter::StartJump(float JumpVelocity)
 
 void APlayerCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState)
 {
+
+
+	OnLeaveState(OldState);
+
+	
 	// 输出状态变化日志
 	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: State changed from %d to %d"), (int32)OldState, (int32)NewState);
 	
 	// 在此处添加状态变化时的C++逻辑处理
 	// 例如：播放音效、粒子效果、同步网络状态等
-	
+
 
 	// 根据新状态执行相关逻辑
 	switch (NewState)

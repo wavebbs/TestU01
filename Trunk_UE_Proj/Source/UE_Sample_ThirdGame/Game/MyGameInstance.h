@@ -70,9 +70,9 @@ private:
 
     /** 时间缩放系统更新频率（秒） */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Game Systems|Performance", meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0"))
-    float m_TimeScaleUpdateRate = 0.0f; // 0表示每帧更新
+    float m_TimeScaleUpdateRate = 0.016f; // 0表示每帧更新
 
     /** 是否启用调试日志 */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Game Systems|Debug", meta = (AllowPrivateAccess = "true"))
-    bool m_bEnableDebugLog = false;
+    bool m_bEnableDebugLog = true;
 };

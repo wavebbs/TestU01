@@ -30,7 +30,7 @@ void UMyTimeScaleTestComponent::TestBulletTime()
 {
     if (m_TimeScaleManager.IsValid())
     {
-        int32 EffectID = m_TimeScaleManager->ApplyBulletTimeEffect(0.2f, 3.0f, 100);
+        int32 EffectID = m_TimeScaleManager->ApplyBulletTimeEffect(0.2f, 1.5f, 100);
         m_ActiveEffectIDs.Add(EffectID);
         UE_LOG(LogTemp, Warning, TEXT("应用子弹时间效果，ID: %d, 时间缩放: 0.2, 持续时间: 3秒"), EffectID);
     }
@@ -40,33 +40,6 @@ void UMyTimeScaleTestComponent::TestBulletTime()
     }
 }
 
-void UMyTimeScaleTestComponent::TestHitFreeze()
-{
-    if (m_TimeScaleManager.IsValid())
-    {
-        int32 EffectID = m_TimeScaleManager->ApplyHitFreezeEffect(0.15f, 200);
-        m_ActiveEffectIDs.Add(EffectID);
-        UE_LOG(LogTemp, Warning, TEXT("应用击中定帧效果，ID: %d, 冻结时间: 0.15秒"), EffectID);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("无法应用击中定帧效果：时间缩放管理器无效"));
-    }
-}
-
-void UMyTimeScaleTestComponent::TestGamePause()
-{
-    if (m_TimeScaleManager.IsValid())
-    {
-        int32 EffectID = m_TimeScaleManager->ApplyGamePauseEffect(1000);
-        m_ActiveEffectIDs.Add(EffectID);
-        UE_LOG(LogTemp, Warning, TEXT("应用游戏暂停效果，ID: %d"), EffectID);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("无法应用游戏暂停效果：时间缩放管理器无效"));
-    }
-}
 
 void UMyTimeScaleTestComponent::TestSlowMotion()
 {
