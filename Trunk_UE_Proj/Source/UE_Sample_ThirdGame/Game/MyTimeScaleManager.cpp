@@ -8,6 +8,7 @@
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Characters/CharacteranimInstanceBase.h"
 #include "Components/AudioComponent.h"
 
 void UMyTimeScaleManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -359,12 +360,13 @@ void UMyTimeScaleManager::ApplyTimeScaleToCharacters()
         {
             if (USkeletalMeshComponent* SkeletalMesh = Character->FindComponentByClass<USkeletalMeshComponent>())
             {
-                if (UAnimInstance* AnimInstance = SkeletalMesh->GetAnimInstance())
+                if (UCharacterAnimInstanceBase* AnimInstance = Cast<UCharacterAnimInstanceBase>(SkeletalMesh->GetAnimInstance()))
                 {
                     // 注意：这里需要使用倒数，因为AnimInstance的播放速率是倒数关系
                     float AnimPlayRate = (m_CurrentTimeScale > 0.0f) ? (1.0f / m_CurrentTimeScale) : 0.0f;
                     // 这里可能需要根据具体的动画系统调整实现方式
                     // AnimInstance->SetPlayRate(AnimPlayRate);
+                    AnimInstance->SetAnimationPlayRate(AnimPlayRate);
                 }
             }
         }

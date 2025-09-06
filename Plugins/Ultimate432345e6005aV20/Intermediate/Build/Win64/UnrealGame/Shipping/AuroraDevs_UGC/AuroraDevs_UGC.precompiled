@@ -1,0 +1,20 @@
+{
+	"OutputFiles": [
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\Module.AuroraDevs_UGC.gen.1.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\Module.AuroraDevs_UGC.gen.2.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\AuroraDevs_UGC.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_PlayerCameraManager.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_SpringArmComponentBase.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_CameraData.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_IFocusTargetMethod.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_IGetActorsMethod.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_CameraAnimationModifier.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_CameraCollisionModifier.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_CameraDitheringModifier.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_CameraModifier.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_PlayCameraAnimCallbackProxy.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_CameraTurnRateModifier.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_InputAccelerationModifier.cpp.obj",
+		"..\\..\\..\\x64\\UnrealGame\\Shipping\\AuroraDevs_UGC\\UGC_PawnInterface.cpp.obj"
+	]
+}

@@ -40,5 +40,8 @@
 			"Name": "GeneSplicer",
 			"Enabled": true
 		}
+	],
+	"AdditionalPluginDirectories": [
+		"../Plugins/Ultimate432345e6005aV20"
 	]
 }

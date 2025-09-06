@@ -42,6 +42,26 @@ protected:
 	UInputAction* PauseAction;
 	
 
+	// 输入动作
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* JumpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* CrouchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* InteractAction;
+	
+	
 	// 攻击相关参数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	float AttackDamage = 25.0f;
@@ -66,19 +86,8 @@ public:
 	bool CheckAction(UInputAction* Action, bool anykey) const;
 
 
-	// 相机组件
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	USpringArmComponent* CameraBoom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	UCameraComponent* FollowCamera;
 
-	// 获取组件引用
-	UFUNCTION(BlueprintPure, Category = "Camera")
-	UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	UFUNCTION(BlueprintPure, Category = "Camera")
-	USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	virtual void ChangeBPState(ECharacterAnimState NewState) override;
 

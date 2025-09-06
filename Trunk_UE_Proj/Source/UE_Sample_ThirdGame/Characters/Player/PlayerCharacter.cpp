@@ -30,16 +30,16 @@ APlayerCharacter::APlayerCharacter()
 		GetCharacterMovement()->RotationRate = FRotator(0.f, 480.f, 0.f);
 	}
 
-	// 创建并设置相机臂
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f;
-	CameraBoom->bUsePawnControlRotation = true;
+	// // 创建并设置相机臂
+	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	// CameraBoom->SetupAttachment(RootComponent);
+	// CameraBoom->TargetArmLength = 300.0f;
+	// CameraBoom->bUsePawnControlRotation = true;
 
 	// 创建并设置跟随相机
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = false;
+	//FollowCamera = FindComponentByClass<UCameraComponent>();//<>(TEXT("FollowCamera"));
+	// FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	// FollowCamera->bUsePawnControlRotation = false;
 }
 
 void APlayerCharacter::BeginPlay()
