@@ -8,6 +8,7 @@
 class UInputAction;
 class UEnhancedPlayerInput;
 struct FInputActionValue;
+class UPlayerChangeStatusCfg;
 
 UCLASS(NotBlueprintType)//(Blueprintable,BlueprintType)
 class UE_SAMPLE_THIRDGAME_API APlayerCharacter : public ABaseCharacter
@@ -107,5 +108,12 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
 	bool IsPlayingMontageByName(const FString& MontageName) const;
 
+	/** 状态配置组件引用（蓝图提前绑定） */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Config")
+	UPlayerChangeStatusCfg* m_PlayerChangeStatusCfg;
+
+	/** 初始状态值（AnimState或Priority，可根据实际需求调整类型） */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Config")
+	int32 m_InitialStatusValue;
 
 };

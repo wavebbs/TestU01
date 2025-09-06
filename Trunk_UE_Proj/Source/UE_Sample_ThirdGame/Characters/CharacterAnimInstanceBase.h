@@ -62,8 +62,7 @@ public:
 
 	/** 当前动画蓝图角色状态 */
 	UPROPERTY(BlueprintReadOnly, Category = "Animation")
-	ECharacterAnimState CurrentState = ECharacterAnimState::Idle;
-
+	TEnumAsByte<ECharacterAnimState> CurrentState = ECharacterAnimState::Idle;
 	
 	// Tick 更新动画属性
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;

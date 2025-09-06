@@ -1,10 +1,10 @@
-#include "AllowChangeStatus.h"
+#include "PlayerChangeStatusCfg.h"
 
 #include "BasePlayerController.h"
 #include "../Enum/CharacterEnumDefine.h"
 #include "PlayerCharacter.h"
 
-UAllowChangeStatus::UAllowChangeStatus()
+UPlayerChangeStatusCfg::UPlayerChangeStatusCfg()
 {
     // 设置组件默认属性
     PrimaryComponentTick.bCanEverTick = false; // 不需要每帧更新
@@ -34,7 +34,7 @@ UAllowChangeStatus::UAllowChangeStatus()
     // 其他状态配置在蓝图中添加
 }
 
-void UAllowChangeStatus::BeginPlay()
+void UPlayerChangeStatusCfg::BeginPlay()
 {
     Super::BeginPlay();
     
@@ -79,25 +79,29 @@ void UAllowChangeStatus::BeginPlay()
     }
 }
 
-APlayerCharacter* UAllowChangeStatus::GetOwnerPlayerCharacter() const
+APlayerCharacter* UPlayerChangeStatusCfg::GetOwnerPlayerCharacter() const
 {
     return OwnerPlayerCharacter;
 }
 
 // 检查状态转换
-bool UAllowChangeStatus::CanChangeState(FStateChangeAbility StateChangeAbility) const
+bool UPlayerChangeStatusCfg::TryChangeState(FStateChangeAbility StateChangeAbility) const
 {
-    for (const FStateConfigItem& Config : StateConfigs)
+    // 倒序遍历 StateConfigs
+    for (int32 i = StateConfigs.Num() - 1; i >= 0; --i)
     {
-        if (StateChangeAbility.HasState(Config.CanChangeTo))
+        const FStateConfigItem& config = StateConfigs[i];
+        // 日志输出当前状态枚举值
+        // 正确输出枚举名称，避免警告和崩溃
+        if (StateChangeAbility.HasState(config.CanChangeTo))
         {
-            if (GetOwnerPlayerCharacter()->CheckAction(Config.InputAction,false))
+            APlayerCharacter* ownerCharacter = GetOwnerPlayerCharacter();
+            if (ownerCharacter && ownerCharacter->CheckAction(config.InputAction, false))
             {
+                ownerCharacter->ChangeBPState(config.AnimState);
                 return true;
             }
         }
-       
     }
-    
     return false;
 }

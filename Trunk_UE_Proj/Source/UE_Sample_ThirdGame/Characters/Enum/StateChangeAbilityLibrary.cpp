@@ -2,26 +2,26 @@
 
 #include "StateChangeAbilityLibrary.h"
 
-bool UStateChangeAbilityLibrary::HasState(const FStateChangeAbility& Ability, ECanChangeState State)
+bool UStateChangeAbilityLibrary::HasState(const FStateChangeAbility& Ability, ECharacterAnimState State)
 {
 	return Ability.HasState(State);
 }
 
-FStateChangeAbility UStateChangeAbilityLibrary::AddState(const FStateChangeAbility& Ability, ECanChangeState State)
+FStateChangeAbility UStateChangeAbilityLibrary::AddState(const FStateChangeAbility& Ability, ECharacterAnimState State)
 {
 	FStateChangeAbility Result = Ability;
 	Result.AddState(State);
 	return Result;
 }
 
-FStateChangeAbility UStateChangeAbilityLibrary::RemoveState(const FStateChangeAbility& Ability, ECanChangeState State)
+FStateChangeAbility UStateChangeAbilityLibrary::RemoveState(const FStateChangeAbility& Ability, ECharacterAnimState State)
 {
 	FStateChangeAbility Result = Ability;
 	Result.RemoveState(State);
 	return Result;
 }
 
-FStateChangeAbility UStateChangeAbilityLibrary::ToggleState(const FStateChangeAbility& Ability, ECanChangeState State)
+FStateChangeAbility UStateChangeAbilityLibrary::ToggleState(const FStateChangeAbility& Ability, ECharacterAnimState State)
 {
 	FStateChangeAbility Result = Ability;
 	Result.ToggleState(State);
@@ -59,7 +59,7 @@ FStateChangeAbility UStateChangeAbilityLibrary::GetIntersection(const FStateChan
 
 bool UStateChangeAbilityLibrary::HasAnyState(const FStateChangeAbility& Ability)
 {
-	return Ability.Value != ECanChangeState::None;
+	return Ability.Value != ECharacterAnimState::None;
 }
 
 bool UStateChangeAbilityLibrary::HasAllStates(const FStateChangeAbility& Ability, const FStateChangeAbility& RequiredStates)
@@ -86,14 +86,21 @@ FString UStateChangeAbilityLibrary::StateAbilityToString(const FStateChangeAbili
 {
 	TArray<FString> StateNames;
 	
-	if (Ability.HasState(ECanChangeState::CanIdle))		StateNames.Add(TEXT("CanIdle"));
-	if (Ability.HasState(ECanChangeState::CanWalk))		StateNames.Add(TEXT("CanWalk"));
-	if (Ability.HasState(ECanChangeState::CanRun))		StateNames.Add(TEXT("CanRun"));
-	if (Ability.HasState(ECanChangeState::CanJump))		StateNames.Add(TEXT("CanJump"));
-	if (Ability.HasState(ECanChangeState::CanAttack))	StateNames.Add(TEXT("CanAttack"));
-	if (Ability.HasState(ECanChangeState::CanDodge))	StateNames.Add(TEXT("CanDodge"));
-	if (Ability.HasState(ECanChangeState::CanDeath))	StateNames.Add(TEXT("CanDeath"));
-	if (Ability.HasState(ECanChangeState::CanHit))		StateNames.Add(TEXT("CanHit"));
+	// const UEnum* enumPtr = StaticEnum<ECharacterAnimState>();
+	// if (enumPtr)
+	// {
+	//     int32 enumCount = enumPtr->NumEnums() - 1; // 排除 _MAX 或隐藏项
+	//     for (int32 i = 0; i < enumCount; ++i)
+	//     {
+	//         ECharacterAnimState state = static_cast<ECharacterAnimState>(enumPtr->GetValueByIndex(i));
+	//         if (Ability.HasState(state))
+	//         {
+	//             FString stateName = enumPtr->GetNameStringByIndex(i);
+	//             StateNames.Add(FString::Printf(TEXT("Can%s"), *stateName));
+	//         }
+	//     }
+	// }
+
 	
 	if (StateNames.Num() == 0)
 	{

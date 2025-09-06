@@ -19,19 +19,19 @@ class UE_SAMPLE_THIRDGAME_API UStateChangeAbilityLibrary : public UBlueprintFunc
 public:
 	// 检查是否包含指定状态
 	UFUNCTION(BlueprintPure, Category = "State Change Ability", CallInEditor)
-	static bool HasState(const FStateChangeAbility& Ability, ECanChangeState State);
+	static bool HasState(const FStateChangeAbility& Ability, ECharacterAnimState State);
 
 	// 添加状态
 	UFUNCTION(BlueprintCallable, Category = "State Change Ability", CallInEditor)
-	static FStateChangeAbility AddState(const FStateChangeAbility& Ability, ECanChangeState State);
+	static FStateChangeAbility AddState(const FStateChangeAbility& Ability, ECharacterAnimState State);
 
 	// 移除状态
 	UFUNCTION(BlueprintCallable, Category = "State Change Ability", CallInEditor)
-	static FStateChangeAbility RemoveState(const FStateChangeAbility& Ability, ECanChangeState State);
+	static FStateChangeAbility RemoveState(const FStateChangeAbility& Ability, ECharacterAnimState State);
 
 	// 切换状态
 	UFUNCTION(BlueprintCallable, Category = "State Change Ability", CallInEditor)
-	static FStateChangeAbility ToggleState(const FStateChangeAbility& Ability, ECanChangeState State);
+	static FStateChangeAbility ToggleState(const FStateChangeAbility& Ability, ECharacterAnimState State);
 
 	// 清空所有状态
 	UFUNCTION(BlueprintCallable, Category = "State Change Ability", CallInEditor)

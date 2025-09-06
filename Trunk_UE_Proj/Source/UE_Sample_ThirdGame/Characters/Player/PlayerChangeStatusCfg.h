@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "../Enum/CharacterEnumDefine.h"
-#include "AllowChangeStatus.generated.h"
+#include "PlayerChangeStatusCfg.generated.h"
 
 // 前向声明
 class UInputAction;
@@ -20,7 +20,7 @@ struct UE_SAMPLE_THIRDGAME_API FStateConfigItem
 
     /** 状态变化能力，定义该状态可以转换到哪些其他状态 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State Configuration")
-    TEnumAsByte<ECanChangeState> CanChangeTo;
+    TEnumAsByte<ECharacterAnimState> CanChangeTo;
 
     /** 触发此状态的输入动作 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State Configuration")
@@ -28,8 +28,8 @@ struct UE_SAMPLE_THIRDGAME_API FStateConfigItem
 
     /** 此配置项对应的动画状态 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State Configuration")
-    ECharacterAnimState AnimState;
-
+    TEnumAsByte<ECharacterAnimState> AnimState = ECharacterAnimState::Idle;
+    
     /** 状态优先级，数值越高优先级越高 */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State Configuration", meta = (ClampMin = "0", ClampMax = "100"))
     int32 Priority = 0;
@@ -39,7 +39,7 @@ struct UE_SAMPLE_THIRDGAME_API FStateConfigItem
     bool bIsDefault = false;
 
     FStateConfigItem()
-        : CanChangeTo(ECanChangeState::None)
+        : CanChangeTo(ECharacterAnimState::None)
         , InputAction(nullptr)
         , AnimState(ECharacterAnimState::Idle)
         , Priority(0)
@@ -54,13 +54,13 @@ struct UE_SAMPLE_THIRDGAME_API FStateConfigItem
  * 可以直接挂载在角色上作为组件使用
  */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent, DisplayName = "允许状态改变配置组件"))
-class UE_SAMPLE_THIRDGAME_API UAllowChangeStatus : public UActorComponent
+class UE_SAMPLE_THIRDGAME_API UPlayerChangeStatusCfg : public UActorComponent
 {
     GENERATED_BODY()
 
 public:
     /** 构造函数 */
-    UAllowChangeStatus();
+    UPlayerChangeStatusCfg();
 
     /** 组件初始化 */
     virtual void BeginPlay() override;
@@ -85,6 +85,6 @@ public:
      * @return 如果可以转换则返回true，否则返回false
      */
     UFUNCTION(BlueprintCallable, Category = "State Configuration")
-    bool CanChangeState(FStateChangeAbility StateChangeAbility) const;
+    bool TryChangeState(FStateChangeAbility StateChangeAbility) const;
     
 };

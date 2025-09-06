@@ -140,6 +140,15 @@ void ABaseCharacter::ChangeBPState(ECharacterAnimState NewState)
 	// 保存旧状态
 	ECharacterAnimState OldState = CurrentState;
 
+    // 修复崩溃：UEnum::GetValueAsString 第二参数应为枚举类型值，不需要枚举名字符串
+    const UEnum* animEnum = StaticEnum<ECharacterAnimState>();
+    FString oldStateStr = animEnum ? animEnum->GetNameStringByValue((int64)OldState) : FString::Printf(TEXT("%d"), (int32)OldState);
+    FString newStateStr = animEnum ? animEnum->GetNameStringByValue((int64)NewState) : FString::Printf(TEXT("%d"), (int32)NewState);
+    UE_LOG(LogTemp, Log, TEXT("%s animation state changed: %s -> %s"),
+        *GetName(),
+        *oldStateStr,
+        *newStateStr);
+	
 	// 更新当前状态
 	CurrentState = NewState;
 
@@ -183,15 +192,19 @@ void ABaseCharacter::EndFloatingWithMovementMode()
 	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: Ended MovementMode floating - Restored to original movement mode"));
 }
 
+void ABaseCharacter::OnLeaveState(ECharacterAnimState OldState)
+{
+    // 可在子类或蓝图扩展，默认输出日志
+    UE_LOG(LogTemp, Log, TEXT("BaseCharacter: 离开状态 %d"), (int32)OldState);
+}
+
 void ABaseCharacter::OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState)
 {
-	// 输出状态变化日志
-	UE_LOG(LogTemp, Log, TEXT("BaseCharacter: State changed from %d to %d"), (int32)OldState, (int32)NewState);
+    // 先调用离开状态逻辑
+    OnLeaveState(OldState);
+    // 输出状态变化日志
+    UE_LOG(LogTemp, Log, TEXT("BaseCharacter: State changed from %d to %d"), (int32)OldState, (int32)NewState);
 	
-	// 在此处添加状态变化时的C++逻辑处理
-	// 例如：播放音效、粒子效果、同步网络状态等
-	
-
 	// 根据新状态执行相关逻辑
 	switch (NewState)
 	{

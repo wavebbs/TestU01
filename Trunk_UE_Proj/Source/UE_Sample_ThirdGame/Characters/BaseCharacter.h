@@ -119,7 +119,7 @@ public:
 
 	/** 当前角色状态 */
 	UPROPERTY(BlueprintReadOnly, Category = "Animation")
-	ECharacterAnimState CurrentState = ECharacterAnimState::Idle;
+	TEnumAsByte<ECharacterAnimState> CurrentState = ECharacterAnimState::Idle;
 
 	/** 动画蓝图实例 */
 	UPROPERTY(BlueprintReadOnly, Category = "Animation")
@@ -145,6 +145,13 @@ public:
 	UFUNCTION()
 	virtual void OnStateChange(ECharacterAnimState OldState, ECharacterAnimState NewState);
 
+	/**
+	 * 离开当前状态时调用，可在蓝图扩展
+	 */
+	UFUNCTION(BlueprintCallable, Category = "State")
+	virtual void OnLeaveState(ECharacterAnimState OldState);
+
+
 private:
 	/** 浮空状态相关变量 */
 	UPROPERTY()
@@ -161,5 +168,3 @@ private:
 	UPROPERTY()
 	float m_FloatingTargetHeight = 0.0f;
 };
-
-

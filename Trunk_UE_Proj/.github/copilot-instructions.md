@@ -45,7 +45,5 @@
 - **R7.2**: Use 4-space indentation, matching Unreal's default style.
 - **R7.3**: Avoid redundant code; focus on completing existing logic.
 
-## Usage
-- Configure in AI tool's custom instruction settings.
-- Adjust `MYGAME_API` and Unreal version as needed.
-- Review generated code for team standard compliance.
+### 8. Check
+- **R8.1**: Please always check whether the file has been generated correctly.

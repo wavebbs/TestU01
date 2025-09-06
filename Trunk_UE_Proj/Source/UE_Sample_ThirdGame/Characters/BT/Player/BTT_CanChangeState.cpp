@@ -5,6 +5,7 @@
 #include "Characters/Player/PlayerCharacter.h"
 #include "Engine/Engine.h"
 #include "Characters/Enum/CharacterEnumDefine.h"
+#include "Characters/Player/PlayerChangeStatusCfg.h"
 
 UBTT_CanChangeState::UBTT_CanChangeState()
 {
@@ -32,6 +33,12 @@ EBTNodeResult::Type UBTT_CanChangeState::ExecuteTask(UBehaviorTreeComponent& Own
     {
         return EBTNodeResult::Failed;
     }
+
+    if (Character->m_PlayerChangeStatusCfg->TryChangeState(StateChangeAbility))
+    {
+        
+        return EBTNodeResult::Succeeded;
+    }
     //
     // if (Character->canchangeStatus)
     // {
@@ -42,23 +49,34 @@ EBTNodeResult::Type UBTT_CanChangeState::ExecuteTask(UBehaviorTreeComponent& Own
     //     UE_LOG(LogTemp, Warning, TEXT("BTT_CanChangeState: 角色没有关联的AllowChangeStatus组件"));
     //     return EBTNodeResult::Failed;
     // }
-    return EBTNodeResult::Succeeded;
+    return EBTNodeResult::Failed;
 }
 
 FString UBTT_CanChangeState::GetStaticDescription() const
 {
-    FString Description = FString::Printf(TEXT("CanChangeState //n"));
+    FString Description = FString::Printf(TEXT("TryChangeState //n"));
         
     // 列出当前设置的状态
     TArray<FString> StateNames;
-    if (StateChangeAbility.HasState(ECanChangeState::CanIdle)) StateNames.Add(TEXT("Idle"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanWalk)) StateNames.Add(TEXT("Walk"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanRun)) StateNames.Add(TEXT("Run"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanJump)) StateNames.Add(TEXT("Jump"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanAttack)) StateNames.Add(TEXT("Attack"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanDodge)) StateNames.Add(TEXT("Dodge"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanDeath)) StateNames.Add(TEXT("Death"));
-    if (StateChangeAbility.HasState(ECanChangeState::CanHit)) StateNames.Add(TEXT("Hit"));
+    
+   const UEnum* EnumPtr = StaticEnum<ECharacterAnimState>();
+    if (EnumPtr)
+    {
+        int32 EnumCount = EnumPtr->NumEnums() - 1; // 排除隐藏的"_MAX"或"_MAX_VALUE"
+        for (int32 i = 0; i < EnumCount; ++i)
+        {
+            int64 EnumValue = EnumPtr->GetValueByIndex(i);
+            ECharacterAnimState State = static_cast<ECharacterAnimState>(EnumValue);
+            if (StateChangeAbility.HasState(State))
+            {
+                FString StateName = EnumPtr->GetNameStringByIndex(i);
+                if (!StateName.IsEmpty())
+                {
+                    StateNames.Add(StateName);
+                }
+            }
+        }
+    }
     
     if (StateNames.Num() > 0)
     {

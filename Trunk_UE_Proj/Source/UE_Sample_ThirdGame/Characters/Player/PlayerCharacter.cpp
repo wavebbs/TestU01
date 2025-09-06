@@ -16,6 +16,7 @@
 #include "Animation/AnimBlueprintGeneratedClass.h"
 #include "Animation/AnimNode_StateMachine.h"
 #include "Characters/CharacterAnimInstanceBase.h"
+#include "PlayerChangeStatusCfg.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -70,6 +71,27 @@ void APlayerCharacter::BeginPlay()
 		EnhancedPlayerInput = InputSubsystem->GetPlayerInput();
 
 
+	}
+
+	// 获取 PlayerChangeStatusCfg 组件（蓝图提前绑定）
+	m_PlayerChangeStatusCfg = FindComponentByClass<UPlayerChangeStatusCfg>();
+	m_InitialStatusValue = 0;
+	if (m_PlayerChangeStatusCfg)
+	{
+		// 遍历 StateConfigs，找到默认项
+		for (const FStateConfigItem& item : m_PlayerChangeStatusCfg->StateConfigs)
+		{
+			if (item.bIsDefault)
+			{
+				m_InitialStatusValue = static_cast<int32>(item.AnimState); // 或 item.Priority，根据实际需求
+				UE_LOG(LogTemp, Warning, TEXT("初始状态值: %d"), m_InitialStatusValue);
+				break;
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerChangeStatusCfg 组件未绑定！"));
 	}
 }
 
@@ -144,7 +166,9 @@ bool APlayerCharacter::CheckAction(UInputAction* Action, bool Anykey) const
 {
 	if (!Action)
 	{
-		return false;
+		///如果没有配置，当没有任何按键按下的时候返回true
+		return  !CheckAction(MoveAction,false);
+		
 	}
 
 
@@ -152,17 +176,17 @@ bool APlayerCharacter::CheckAction(UInputAction* Action, bool Anykey) const
 	FInputActionValue ActionValue = EnhancedPlayerInput->GetActionValue(Action);
 
 
-	if (Anykey)
-	{
-		if (ActionValue.IsNonZero())
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
+	// if (Anykey)
+	// {
+	// 	if (ActionValue.IsNonZero())
+	// 	{
+	// 		return false;
+	// 	}
+	// 	else
+	// 	{
+	// 		return true;
+	// 	}
+	// }
 	// 根据动作类型检查是否被触发
 	// 对于布尔类型的动作，检查是否为true
 	if (Action->ValueType == EInputActionValueType::Boolean)
