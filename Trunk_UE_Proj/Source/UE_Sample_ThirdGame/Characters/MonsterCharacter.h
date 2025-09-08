@@ -21,20 +21,21 @@ class UE_SAMPLE_THIRDGAME_API AMonsterCharacter : public ABaseCharacter
 public:
 	/** 构造函数 */
 	AMonsterCharacter();
+	void BeginPlay() override;
 
 	// /** 受击盒组件 */
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	// TObjectPtr<class UHurtBoxComponent> HurtBoxComponent;
+	// UHurtBoxComponent* HurtBoxComponent;
 
 	/** 受击逻辑组件 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<class UCharacterBeHitLogicComponent> CharacterBeHitLogic;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCharacterBeHitLogicComponent* CharacterBeHitLogic;
 
 	/** 受击盒处理器 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<class UHurtBoxHandlerComponent> HurtBoxHandler;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UHurtBoxHandlerComponent* HurtBoxHandler;
 
 	/** 角色数据组件 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<class UCharacterDataComponent> CharacterData;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCharacterDataComponent* CharacterData;
 };

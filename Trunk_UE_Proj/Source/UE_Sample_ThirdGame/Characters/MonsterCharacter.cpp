@@ -13,23 +13,24 @@
  */
 AMonsterCharacter::AMonsterCharacter()
 {
-	// TODO
-	if (!CharacterBeHitLogic)
-	{
-		CharacterBeHitLogic = CreateDefaultSubobject<UCharacterBeHitLogicComponent>(TEXT("CharacterBeHitLogicComponent"));
-	}
+	//CharacterBeHitLogicComponent
+	CharacterBeHitLogic = CreateDefaultSubobject<UCharacterBeHitLogicComponent>(TEXT("CharacterBeHitLogicComponent"));
 
-	// 检查并创建 HurtBoxHandlerComponent，避免重复创建
-	if (!HurtBoxHandler)
-	{
-		HurtBoxHandler = CreateDefaultSubobject<UHurtBoxHandlerComponent>(TEXT("HurtBoxHandlerComponent"));
-	}
+	// HurtBoxHandlerComponent
+	HurtBoxHandler = CreateDefaultSubobject<UHurtBoxHandlerComponent>(TEXT("HurtBoxHandlerComponent"));
 
-	// 检查并创建 CharacterDataComponent，避免重复创建
-	if (!CharacterData)
-	{
-		CharacterData = CreateDefaultSubobject<UCharacterDataComponent>(TEXT("CharacterDataComponent"));
-	}
+	// CharacterDataComponent
+	CharacterData = CreateDefaultSubobject<UCharacterDataComponent>(TEXT("CharacterDataComponent"));
 	
 	AIControllerClass = AAIController::StaticClass();
+}
+
+void AMonsterCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    if (!IsValid(CharacterData))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("CharacterDataComponent is NULL! 请检查构造函数或蓝图设置。"));
+    }
 }
